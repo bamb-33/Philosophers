@@ -30,6 +30,7 @@ typedef struct s_philo
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	lock;
 	int				counter;
+	int				*hash_table;
 }	t_philo;
 
 int		ft_atoi(const char *str);

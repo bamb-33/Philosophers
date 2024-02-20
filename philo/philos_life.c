@@ -15,21 +15,36 @@
 void	philos_life(void *args)
 {
 	int		i;
+	int		j;
 	t_philo	*data;
 
 	data = (t_philo *) args;
 	pthread_mutex_lock(&(data->lock));
 	i = data->counter;
+	j = 0;
 	data->counter++;
 	pthread_mutex_unlock(&(data->lock));
-
-	// pthread_mutex_lock(&(data->forks[i]));
-	// pthread_mutex_lock(&(next_node[i]));
-	printf("i am philosopher number %d is now eating\n", i);
-	usleep(data->time_to_eat);
-	printf("i am philosopher number %d is now sleeping\n", i);
-	usleep(data->time_to_sleep);
-	printf("i am philosopher number %d is now thinkin\n", i);
-	// pthread_mutex_unlock(&(next_node[i]));
-	// pthread_mutex_unlock(&(current_node[i]));
+	while (j < data->num_of_times_philos_must_eat)
+	{
+		while (data->hash_table[i] == 0)
+			usleep(1);
+		pthread_mutex_lock(&(data->forks[i]));
+		pthread_mutex_lock(&(data->forks[(i + 1) % data->philos_num]));
+		printf("i am philosopher number %d is now eating\n", i);
+		usleep(data->time_to_eat);
+		pthread_mutex_unlock(&(data->forks[i]));
+		pthread_mutex_unlock(&(data->forks[(i + 1) % data->philos_num]));
+		if (data->hash_table[i] == 1)
+			data->hash_table[i] = 0;
+		else
+			data->hash_table[i] = 1;
+		if (data->hash_table[(i + 1) % data->philos_num] == 1)
+			data->hash_table[(i + 1) % data->philos_num] = 0;
+		else
+			data->hash_table[(i + 1) % data->philos_num] = 1;
+		printf("i am philosopher number %d is now sleeping\n", i);
+		usleep(data->time_to_sleep);
+		printf("i am philosopher number %d is now thinkin\n", i);
+		j++;
+	}
 }
