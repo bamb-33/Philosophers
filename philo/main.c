@@ -30,11 +30,23 @@ int	forks_init(t_philo *data)
 
 int	init(t_philo *data, char *av[])
 {
+	int	i;
+
+	i = 0;
 	data->philos_num = ft_atoi(av[1]);
 	data->time_to_die = ft_atoi(av[2]);
 	data->time_to_eat = ft_atoi(av[3]);
 	data->time_to_sleep = ft_atoi(av[4]);
-	data->counter = 1;
+	data->counter = 0;
+	data->hash_table = (int *) malloc (sizeof(int) * data->philos_num);
+	while (i < data->philos_num)
+	{
+		if (i % 2 == 0)
+			data->hash_table[i] = 1;
+		else
+			data->hash_table[i] = 0;
+		i++;
+	}
 	if (av[5])
 		data->num_of_times_philos_must_eat = ft_atoi(av[5]);
 	data->ids = (pthread_t *) malloc (sizeof(pthread_t) * data->philos_num);

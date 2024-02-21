@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -lpthread
+CFLAGS = -Wall -Wextra -Werror
 
 SRC = main.c ft_atoi.c philos_life.c
 
@@ -9,7 +9,7 @@ NAME = philo
 all: $(NAME)
 
 $(NAME): $(SRC)
-	$(CC) $(CFLAGS) $(SRC) -o $(NAME)
+	$(CC) $(CFLAGS) $(SRC) -lpthread -o $(NAME)
 
 clean:
 	rm -f $(OBJ)
