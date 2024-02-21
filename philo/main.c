@@ -6,11 +6,23 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 12:28:29 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/21 19:06:00 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/21 20:29:16 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
+
+void	simulation_started(t_philo *data)
+{
+	int	i;
+	
+	i = 0;
+	while (i < data->philos_num)
+	{
+		if (data->simulation_started[i])
+			i++;
+	}
+}
 
 int	forks_init(t_philo *data)
 {
@@ -40,13 +52,13 @@ int	init(t_philo *data, char *av[])
 	data->counter = 0;
 	data->hash_table = (int *) malloc (sizeof(int) * data->philos_num);
 	data->simulation_started = (int *) malloc (sizeof(int) * data->philos_num);
-	while ()//implement a loop where you zero the whole array
 	while (i < data->philos_num)
 	{
 		if (i % 2 == 0)
 			data->hash_table[i] = 1;
 		else
 			data->hash_table[i] = 0;
+		data->simulation_started[i] = 0;
 		i++;
 	}
 	if (av[5])
@@ -69,7 +81,7 @@ int	create_threads(t_philo *data, pthread_t *ids, pthread_t starving_time_id)
 		if (pthread_create(&(ids[i++]), NULL, (void *) philos_life, data))
 			return (1);
 	}
-	//check data->simulation_started to see if all threads are good to go and then run the thread bellow
+	simulation_started(data);
 	if (pthread_create(&starving_time_id, NULL, (void *) meals_time, data))
 		return (1);
 	while (i)

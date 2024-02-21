@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 14:54:08 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/21 19:02:06 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/21 20:32:25 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ void	meals_time(void *args)
 	{
 		if (get_current_time(&(data->philos_starving_time[i])) > data->time_to_die)
 		{
-			printf("%ld\n", get_current_time(&(data->philos_starving_time[i])));
-			break ;
+			printf("%ld Philosopher number %d mat bjo3\n", get_current_time(data->time_start), i + 1);
+			exit(0);
 		}
 		i++;
 		if (i == data->philos_num)
