@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 15:06:35 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/21 15:34:24 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/21 19:04:15 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	philos_life(void *args)
 		printf("gettimeofday failed\n");
 		exit(1);
 	}
+	data->simulation_started[i] = 1;
 	pthread_mutex_unlock(&(data->lock));
 	while (j < data->num_of_times_philos_must_eat)
 	{

@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 12:28:47 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/21 15:13:03 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/21 19:03:13 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct s_philo
 	pthread_t		starving_time_id;
 	struct timeval	*philos_starving_time;
 	int				all_threads_exited;
+	int				*simulation_started;
 }	t_philo;
 
 int		ft_atoi(const char *str);
