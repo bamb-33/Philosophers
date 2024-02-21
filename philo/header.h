@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 12:28:47 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/20 20:27:15 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/21 15:13:03 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
+# include <sys/time.h>
 
 typedef struct s_philo
 {
@@ -31,9 +32,15 @@ typedef struct s_philo
 	pthread_mutex_t	lock;
 	int				counter;
 	int				*hash_table;
+	struct timeval	*time_start;
+	pthread_t		starving_time_id;
+	struct timeval	*philos_starving_time;
+	int				all_threads_exited;
 }	t_philo;
 
 int		ft_atoi(const char *str);
 void	philos_life(void *args);
+void	meals_time(void *args);
+long int	get_current_time(struct timeval *time_start);
 
 #endif
