@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 14:54:08 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/22 09:56:16 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/22 20:13:30 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ void	meals_time(void *args)
 	i = 0;
 	while (!data->all_threads_exited)
 	{
-		if (get_current_time(&(data->philos_starving_time[i])) > data->time_to_die) 
+		if (get_current_time(&(data->philos_starving_time[i])) > data->time_to_die && !data->thread_exited[i]) 
 		{
-			philosopher_status_printer(data, 5, i);
 			data->philo_died = 1;
+			philosopher_status_printer(data, 5, i);
 			break ;
 		}
 		i++;

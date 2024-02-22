@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 12:28:29 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/22 09:45:24 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/22 19:47:02 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,11 @@ int	init(t_philo *data, char *av[])
 		data->simulation_started[i] = 0;
 		i++;
 	}
+	data->av = av;
 	if (av[5])
 		data->num_of_times_philos_must_eat = ft_atoi(av[5]);
 	data->ids = (pthread_t *) malloc (sizeof(pthread_t) * data->philos_num);
+	data->thread_exited = (int *) malloc (sizeof(int) * data->philos_num);
 	data->philos_starving_time = (struct timeval *) malloc (sizeof(struct timeval) * data->philos_num);
 	data->all_threads_exited = 0;
 	if (forks_init(data))

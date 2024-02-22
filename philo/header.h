@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 12:28:47 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/22 09:56:39 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/22 12:54:07 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ typedef struct s_philo
 	int				all_threads_exited;
 	int				*simulation_started;
 	int				philo_died;
+	int				*thread_exited;
+	char			**av;
 }	t_philo;
 
 int			ft_atoi(const char *str);
