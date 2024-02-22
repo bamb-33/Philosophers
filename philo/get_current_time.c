@@ -1,34 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   meals_time.c                                       :+:      :+:    :+:   */
+/*   get_current_time.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/21 14:54:08 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/22 09:56:16 by naadou           ###   ########.fr       */
+/*   Created: 2024/02/22 09:40:57 by naadou            #+#    #+#             */
+/*   Updated: 2024/02/22 09:41:16 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-void	meals_time(void *args)
+long int	get_current_time(struct timeval *time_start)
 {
-	t_philo	*data;
-	int		i;
+	struct timeval current_time;
+	long int	time_in_micro_s;
 
-	data = (t_philo *) args;
-	i = 0;
-	while (!data->all_threads_exited)
+	if (gettimeofday(&current_time, NULL))
 	{
-		if (get_current_time(&(data->philos_starving_time[i])) > data->time_to_die) 
-		{
-			philosopher_status_printer(data, 5, i);
-			data->philo_died = 1;
-			break ;
-		}
-		i++;
-		if (i == data->philos_num)
-			i = 0;
+		printf("gettimeofday failed\n");
+		exit(1);
 	}
+	time_in_micro_s = (current_time.tv_sec * 1e6 + current_time.tv_usec) - (time_start->tv_sec * 1e6 + time_start->tv_usec);
+	return (time_in_micro_s / 1000);
 }

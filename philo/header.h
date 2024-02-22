@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 12:28:47 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/21 19:03:13 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/22 09:56:39 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,13 @@ typedef struct s_philo
 	struct timeval	*philos_starving_time;
 	int				all_threads_exited;
 	int				*simulation_started;
+	int				philo_died;
 }	t_philo;
 
-int		ft_atoi(const char *str);
-void	philos_life(void *args);
-void	meals_time(void *args);
+int			ft_atoi(const char *str);
+void		philos_life(void *args);
+void		meals_time(void *args);
 long int	get_current_time(struct timeval *time_start);
+int			philosopher_status_printer(t_philo *data, int flag, int i);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 12:28:29 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/21 20:29:16 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/22 09:45:24 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ int	init(t_philo *data, char *av[])
 	data->counter = 0;
 	data->hash_table = (int *) malloc (sizeof(int) * data->philos_num);
 	data->simulation_started = (int *) malloc (sizeof(int) * data->philos_num);
+	data->philo_died = 0;
 	while (i < data->philos_num)
 	{
 		if (i % 2 == 0)
