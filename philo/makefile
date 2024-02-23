@@ -1,7 +1,7 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-SRC = main.c ft_atoi.c philos_life.c meals_time.c get_current_time.c
+SRC = main.c ft_atoi.c philos_life.c meals_time.c get_current_time.c free_all.c
 
 OBJ = $(SRC:.c=.o)
 NAME = philo

@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 12:28:29 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/22 19:47:02 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/23 12:10:39 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ int	init(t_philo *data, char *av[])
 	data->counter = 0;
 	data->hash_table = (int *) malloc (sizeof(int) * data->philos_num);
 	data->simulation_started = (int *) malloc (sizeof(int) * data->philos_num);
+	data->thread_exited = (int *) malloc (sizeof(int) * data->philos_num);
 	data->philo_died = 0;
 	while (i < data->philos_num)
 	{
@@ -60,13 +61,13 @@ int	init(t_philo *data, char *av[])
 		else
 			data->hash_table[i] = 0;
 		data->simulation_started[i] = 0;
+		data->thread_exited[i] = 0;
 		i++;
 	}
 	data->av = av;
 	if (av[5])
 		data->num_of_times_philos_must_eat = ft_atoi(av[5]);
 	data->ids = (pthread_t *) malloc (sizeof(pthread_t) * data->philos_num);
-	data->thread_exited = (int *) malloc (sizeof(int) * data->philos_num);
 	data->philos_starving_time = (struct timeval *) malloc (sizeof(struct timeval) * data->philos_num);
 	data->all_threads_exited = 0;
 	if (forks_init(data))
@@ -74,7 +75,7 @@ int	init(t_philo *data, char *av[])
 	return (0);
 }
 
-int	create_threads(t_philo *data, pthread_t *ids, pthread_t starving_time_id)
+int	create_threads(t_philo *data, pthread_t *ids)
 {
 	int	i;
 
@@ -85,12 +86,8 @@ int	create_threads(t_philo *data, pthread_t *ids, pthread_t starving_time_id)
 			return (1);
 	}
 	simulation_started(data);
-	if (pthread_create(&starving_time_id, NULL, (void *) meals_time, data))
-		return (1);
 	while (i)
-		pthread_join(ids[--i], NULL);
-	data->all_threads_exited = 1;
-	pthread_join(starving_time_id, NULL);
+		pthread_detach(ids[--i]);
 	return (0);
 }
 
@@ -108,6 +105,8 @@ int	main(int ac, char *av[])
 	}
 	if (init(data, av))
 		return (1);
-	create_threads(data, data->ids, data->starving_time_id);
+	create_threads(data, data->ids);
+	meals_time(data);
+	free_all(data);
 	return (0);
 }

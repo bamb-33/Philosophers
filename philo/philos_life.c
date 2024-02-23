@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 15:06:35 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/22 20:14:11 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/23 18:00:16 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,27 +31,33 @@
 // 	return (0);
 // }
 
-void	permission_to_wait_for_fork(t_philo *data, int i)
-{
-	data->hash_table[i] = 0;
-	data->hash_table[(i + 1) % data->philos_num] = 1;
-}
+// void	permission_to_wait_for_fork(t_philo *data, int i)
+// {
+// 	data->hash_table[i] = 0;
+// 	data->hash_table[(i + 1) % data->philos_num] = 1;
+// }
 
-int	philosopher_status_printer(t_philo *data, int flag, int i)
+// void	permission_to_wait_for_fork(t_philo *data, int i)
+// {
+// 	data->hash_table[i] = 0;
+// 	data->hash_table[(i + 1) % data->philos_num] = 1;
+// }
+
+void	philosopher_status_printer(t_philo *data, int flag, int i)
 {
-	if (flag == 5)
-		printf("%ld %d  died\n", get_current_time(data->time_start), i + 1);
+	long int	current_time;
+
+	current_time = get_current_time(data->time_start);
 	if (data->philo_died == 1)
-		return (1);
+		return ;
 	if (flag == 1)
-		printf("%ld %d  has taken a fork\n", get_current_time(data->time_start), i + 1);
+		printf("%ld %d  has taken a fork\n", current_time, i + 1);
 	else if (flag == 2)
-		printf("%ld %d  is eating\n", get_current_time(data->time_start), i + 1);
+		printf("%ld %d  has taken a fork\n%ld %d  is eating\n", current_time, i + 1, current_time, i + 1);
 	else if (flag == 3)
-		printf("%ld %d  is sleeping\n", get_current_time(data->time_start), i + 1);
+		printf("%ld %d  is sleeping\n", current_time, i + 1);
 	else if (flag == 4)
-		printf("%ld %d  is thinking\n", get_current_time(data->time_start), i + 1);
-	return (0);
+		printf("%ld %d  is thinking\n", current_time, i + 1);
 }
 
 void	limited_simulation(t_philo *data, int i)
@@ -61,18 +67,16 @@ void	limited_simulation(t_philo *data, int i)
 	j = 0;
 	while (j < data->num_of_times_philos_must_eat)
 	{
-		while (data->hash_table[i] == 0);
-		pthread_mutex_lock(&(data->forks[i]));
-		philosopher_status_printer(data, 1, i);
-		// while (data->hash_table[(i + 1) % data->philos_num] == 1);
+		while (data->hash_table[(i + 1) % data->philos_num] == 1);
 		pthread_mutex_lock(&(data->forks[(i + 1) % data->philos_num]));
+		pthread_mutex_lock(&(data->forks[i]));
+		data->hash_table[i] = 0;
 		philosopher_status_printer(data, 1, i);
-		philosopher_status_printer(data, 2, i);
 		gettimeofday(&(data->philos_starving_time[i]), NULL);
+		philosopher_status_printer(data, 2, i);
 		usleep(data->time_to_eat);
 		pthread_mutex_unlock(&(data->forks[i]));
 		pthread_mutex_unlock(&(data->forks[(i + 1) % data->philos_num]));
-		permission_to_wait_for_fork(data, i);
 		philosopher_status_printer(data, 3, i);
 		usleep(data->time_to_sleep);
 		philosopher_status_printer(data, 4, i);
@@ -84,20 +88,21 @@ void	limited_simulation(t_philo *data, int i)
 
 void	infinite_simulation(t_philo *data, int i)
 {
+	char	str;
+
+	str = 0;
 	while (1)
 	{
-		while (data->hash_table[i] == 0);
-		pthread_mutex_lock(&(data->forks[i]));
-		philosopher_status_printer(data, 1, i);
-		// while (data->hash_table[(i + 1) % data->philos_num] == 1);
+		while (data->hash_table[(i + 1) % data->philos_num] == 1);
 		pthread_mutex_lock(&(data->forks[(i + 1) % data->philos_num]));
+		pthread_mutex_lock(&(data->forks[i]));
+		data->hash_table[i] = 0;
 		philosopher_status_printer(data, 1, i);
+		gettimeofday(&(data->philos_starving_time[i]), NULL);
 		philosopher_status_printer(data, 2, i);
-		// gettimeofday(&(data->philos_starving_time[i]), NULL); //try to minimize the functions in between the mutexes because its slows down the process do it another way
 		usleep(data->time_to_eat);
 		pthread_mutex_unlock(&(data->forks[i]));
 		pthread_mutex_unlock(&(data->forks[(i + 1) % data->philos_num]));
-		permission_to_wait_for_fork(data, i);
 		philosopher_status_printer(data, 3, i);
 		usleep(data->time_to_sleep);
 		philosopher_status_printer(data, 4, i);
@@ -109,17 +114,13 @@ void	infinite_simulation(t_philo *data, int i)
 void	philos_life(void *args)
 {
 	int		i;
-	int		j;
 	t_philo	*data;
 
 	data = (t_philo *) args;
 	pthread_mutex_lock(&(data->lock));
-	i = data->counter;
+	i = data->counter++;
 	gettimeofday(&(data->philos_starving_time[i]), NULL);
-	j = 0;
-	data->counter++;
 	data->simulation_started[i] = 1;
-	data->thread_exited[i] = 0;
 	pthread_mutex_unlock(&(data->lock));
 	if (data->av[5] == NULL)
 		infinite_simulation(data, i);
