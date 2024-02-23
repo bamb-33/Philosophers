@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 12:28:29 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/23 12:10:39 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/23 18:08:54 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	init(t_philo *data, char *av[])
 	return (0);
 }
 
-int	create_threads(t_philo *data, pthread_t *ids)
+int	create_threads(t_philo *data, pthread_t *ids, pthread_t starving_time_id)
 {
 	int	i;
 
@@ -86,8 +86,12 @@ int	create_threads(t_philo *data, pthread_t *ids)
 			return (1);
 	}
 	simulation_started(data);
+	if (pthread_create(&starving_time_id, NULL, (void *) meals_time, data))
+		return (1);
 	while (i)
-		pthread_detach(ids[--i]);
+		pthread_join(ids[--i], NULL);
+	data->all_threads_exited = 1;
+	pthread_join(starving_time_id, NULL);
 	return (0);
 }
 
@@ -105,8 +109,7 @@ int	main(int ac, char *av[])
 	}
 	if (init(data, av))
 		return (1);
-	create_threads(data, data->ids);
-	meals_time(data);
+	create_threads(data, data->ids, data->starving_time_id);
 	free_all(data);
 	return (0);
 }
