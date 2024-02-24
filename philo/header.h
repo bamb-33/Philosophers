@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 12:28:47 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/23 18:07:39 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/24 12:42:52 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,30 +23,41 @@
 typedef struct s_philo
 {
 	pthread_t		*ids;
+	pthread_t		starving_time_id;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	lock;
+	struct timeval	time_start;
+	struct timeval	*philos_starving_time;
 	int				philos_num;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				num_of_times_philos_must_eat;
-	pthread_mutex_t	*forks;
-	pthread_mutex_t	lock;
 	int				counter;
-	int				*hash_table;
-	struct timeval	*time_start;
-	pthread_t		starving_time_id;
-	struct timeval	*philos_starving_time;
-	int				all_threads_exited;
 	int				*simulation_started;
+	int				all_threads_exited;
 	int				philo_died;
+	int				*hash_table;
 	int				*thread_exited;
 	char			**av;
 }	t_philo;
 
+typedef struct s_to_free
+{
+	void				*content;
+	struct s_to_free	*next;
+}	t_to_free;
+
 int			ft_atoi(const char *str);
+t_philo		*init(char *av[]);
+int			create_threads(t_philo *data, pthread_t *ids, pthread_t starving_time_id);
 void		philos_life(void *args);
 void		meals_time(void *args);
 long int	get_current_time(struct timeval *time_start);
 void		philosopher_status_printer(t_philo *data, int flag, int i);
-void		free_all(t_philo *data);
+
+void		ft_lstadd_back(t_to_free **lst, t_to_free *new);
+void		ft_lstclear(t_to_free **lst);
+t_to_free	*ft_lstnew(void *content);
 
 #endif

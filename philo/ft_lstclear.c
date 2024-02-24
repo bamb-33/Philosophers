@@ -1,27 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_current_time.c                                 :+:      :+:    :+:   */
+/*   ft_lstclear.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/22 09:40:57 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/24 12:04:09 by naadou           ###   ########.fr       */
+/*   Created: 2023/11/05 12:44:33 by naadou            #+#    #+#             */
+/*   Updated: 2024/02/24 10:28:21 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-long int	get_current_time(struct timeval *time_start)
+void	ft_lstclear(t_to_free **lst)
 {
-	struct timeval	current_time;
-	long int		time_in_micro_s;
+	t_to_free	*tmp;
 
-	if (gettimeofday(&current_time, NULL))
+	if (!lst || !(*lst))
+		return ;
+	while (*lst)
 	{
-		printf("gettimeofday failed\n");
+		tmp = *lst;
+		free (tmp->content);
+		*lst = (*lst)->next;
+		free(tmp);
 	}
-	time_in_micro_s = (current_time.tv_sec * 1e6 + current_time.tv_usec)
-		- (time_start->tv_sec * 1e6 + time_start->tv_usec);
-	return (time_in_micro_s / 1000);
+	*lst = NULL;
 }

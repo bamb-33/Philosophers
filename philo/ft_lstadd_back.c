@@ -1,27 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_current_time.c                                 :+:      :+:    :+:   */
+/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/22 09:40:57 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/24 12:04:09 by naadou           ###   ########.fr       */
+/*   Created: 2023/11/05 11:43:40 by naadou            #+#    #+#             */
+/*   Updated: 2024/02/24 10:24:48 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-long int	get_current_time(struct timeval *time_start)
+void	ft_lstadd_back(t_to_free **lst, t_to_free *new)
 {
-	struct timeval	current_time;
-	long int		time_in_micro_s;
+	t_to_free	*tmp;
 
-	if (gettimeofday(&current_time, NULL))
+	if (!lst || !new)
+		return ;
+	tmp = *lst;
+	if (*lst)
 	{
-		printf("gettimeofday failed\n");
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = new;
 	}
-	time_in_micro_s = (current_time.tv_sec * 1e6 + current_time.tv_usec)
-		- (time_start->tv_sec * 1e6 + time_start->tv_usec);
-	return (time_in_micro_s / 1000);
+	else
+		*lst = new;
 }

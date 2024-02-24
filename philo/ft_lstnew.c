@@ -1,25 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_all.c                                         :+:      :+:    :+:   */
+/*   ft_lstnew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/23 11:29:23 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/23 11:48:06 by naadou           ###   ########.fr       */
+/*   Created: 2023/11/04 16:23:55 by naadou            #+#    #+#             */
+/*   Updated: 2024/02/24 10:42:44 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-void	free_all(t_philo *data)
+t_to_free	*ft_lstnew(void *content)
 {
-	free (data->hash_table);
-	free (data->simulation_started);
-	free (data->ids);
-	free (data->thread_exited);
-	free (data->philos_starving_time);
-	free (data->time_start);
-	free (data->forks);
-	free (data);
+	t_to_free	*new_node;
+
+	if (!content)
+		return (NULL);
+	new_node = (t_to_free *) malloc (sizeof(t_to_free));
+	if (!new_node)
+		return (NULL);
+	new_node->content = content;
+	new_node->next = NULL;
+	return (new_node);
 }
