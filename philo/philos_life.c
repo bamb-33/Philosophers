@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 15:06:35 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/24 12:44:08 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/24 18:24:19 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,12 @@ void	philos_life(void *args)
 	data->simulation_started[i] = 1;
 	philosopher_status_printer(data, 4, i);
 	pthread_mutex_unlock(&(data->lock));
-	if (data->av[5] == NULL)
+	if (data->philos_num == 1)
+	{
+		while (data->philo_died == 0)
+			usleep(1);
+	}
+	else if (data->av[5] == NULL)
 		infinite_simulation(data, i);
 	else
 		limited_simulation(data, i);

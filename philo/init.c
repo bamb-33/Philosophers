@@ -6,13 +6,13 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 10:49:32 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/24 12:44:56 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/24 19:03:46 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-void	init_1(t_philo *data, char *av[])
+int	init_1(t_philo *data, char *av[])
 {
 	data->philos_num = ft_atoi(av[1]);
 	data->time_to_die = ft_atoi(av[2]);
@@ -20,6 +20,15 @@ void	init_1(t_philo *data, char *av[])
 	data->time_to_sleep = ft_atoi(av[4]) * 1000;
 	if (av[5])
 		data->num_of_times_philos_must_eat = ft_atoi(av[5]);
+	if (data->philos_num < 0
+		|| data->time_to_die < 0
+		|| data->time_to_eat < 0 || data->time_to_sleep < 0
+		|| data->num_of_times_philos_must_eat < 0)
+	{
+		printf("invalid argument\n");
+		return (1);
+	}
+	return (0);
 }
 
 int	init_2(t_philo *data, t_to_free *head)
@@ -41,6 +50,7 @@ int	init_2(t_philo *data, t_to_free *head)
 		ft_lstclear(&head);
 		return (1);
 	}
+	data->head = head;
 	return (0);
 }
 
@@ -71,7 +81,7 @@ int	init_4(t_philo *data, char *av[])
 {
 	int	i;
 
-	i =0;
+	i = 0;
 	while (i < data->philos_num)
 	{
 		if (i % 2 == 0)
@@ -102,7 +112,8 @@ t_philo	*init(char *av[])
 		ft_lstclear(&head);
 		return (NULL);
 	}
-	init_1(data, av);
+	if (init_1(data, av))
+		return (NULL);
 	if (init_2(data, head))
 		return (NULL);
 	if (init_3(data, head))

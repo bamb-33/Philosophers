@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 18:32:02 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/20 12:43:27 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/24 19:01:06 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,7 @@ int	ft_atoi(const char *str)
 		result = (result * 10) + (str[i] - 48);
 		i++;
 	}
+	if (str[i] != '\0')
+		return (-1);
 	return (result * sign);
 }

@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 14:54:08 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/24 12:44:32 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/24 14:50:04 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ void	meals_time(void *args)
 			> data->time_to_die && !data->thread_exited[i])
 		{
 			data->philo_died = 1;
-			printf("%ld %d  died\n", get_current_time(&(data->time_start)), i + 1);
+			printf("%ld %d  died\n",
+				get_current_time(&(data->time_start)), i + 1);
 			break ;
 		}
 		i++;
