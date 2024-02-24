@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 15:06:35 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/24 18:24:19 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/24 20:51:49 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,14 @@
 
 void	philosopher_status_printer(t_philo *data, int flag, int i)
 {
+	long int	current_time;
+
+	current_time = get_current_time(&(data->time_start));
+	if (current_time == -1)
+	{
+		data->philo_died = 1;
+		return ;
+	}
 	if (data->philo_died == 1)
 		return ;
 	if (flag == 1)
@@ -90,7 +98,11 @@ void	philos_life(void *args)
 	data = (t_philo *) args;
 	pthread_mutex_lock(&(data->lock));
 	i = data->counter++;
-	gettimeofday(&(data->philos_starving_time[i]), NULL);
+	if (gettimeofday(&(data->philos_starving_time[i]), NULL))
+	{
+		printf("gettimeofday failed\n");
+		return ;
+	}
 	data->simulation_started[i] = 1;
 	philosopher_status_printer(data, 4, i);
 	pthread_mutex_unlock(&(data->lock));

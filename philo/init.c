@@ -6,13 +6,13 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 10:49:32 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/24 19:03:46 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/24 20:52:19 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-int	init_1(t_philo *data, char *av[])
+int	init_1(t_philo *data, char *av[], t_to_free *head)
 {
 	data->philos_num = ft_atoi(av[1]);
 	data->time_to_die = ft_atoi(av[2]);
@@ -26,6 +26,7 @@ int	init_1(t_philo *data, char *av[])
 		|| data->num_of_times_philos_must_eat < 0)
 	{
 		printf("invalid argument\n");
+		ft_lstclear(&head);
 		return (1);
 	}
 	return (0);
@@ -70,10 +71,16 @@ int	init_3(t_philo *data, t_to_free *head)
 	while (i < data->philos_num)
 	{
 		if (pthread_mutex_init(&(data->forks[i++]), NULL))
+		{
+			ft_lstclear(&head);
 			return (1);
+		}
 	}
 	if (pthread_mutex_init(&(data->lock), NULL))
+	{
+		ft_lstclear(&head);
 		return (1);
+	}
 	return (0);
 }
 
@@ -96,7 +103,11 @@ int	init_4(t_philo *data, char *av[])
 	data->counter = 0;
 	data->philo_died = 0;
 	data->all_threads_exited = 0;
-	gettimeofday(&(data->time_start), NULL);
+	if (gettimeofday(&(data->time_start), NULL))
+	{
+		ft_lstclear(&(data->head));
+		return (1);
+	}
 	return (0);
 }
 
@@ -112,7 +123,7 @@ t_philo	*init(char *av[])
 		ft_lstclear(&head);
 		return (NULL);
 	}
-	if (init_1(data, av))
+	if (init_1(data, av, head))
 		return (NULL);
 	if (init_2(data, head))
 		return (NULL);

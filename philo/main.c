@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 12:28:29 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/24 12:52:00 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/24 20:48:13 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,11 @@ int	main(int ac, char *av[])
 	}
 	data = init(av);
 	if (!data)
+	{
 		return (1);
-	create_threads(data, data->ids, data->starving_time_id);
+	}
+	if (create_threads(data, data->ids, data->starving_time_id))
+		return (1);
 	ft_lstclear(&(data->head));
 	return (0);
 }

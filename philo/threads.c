@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 12:38:24 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/24 12:38:51 by naadou           ###   ########.fr       */
+/*   Updated: 2024/02/24 20:53:13 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,19 @@ void	simulation_started(t_philo *data)
 	}
 }
 
+int	waiting_for_threads(t_philo *data, pthread_t *ids, pthread_t s_id, int i)
+{
+	while (i)
+	{
+		if (pthread_join(ids[--i], NULL))
+			return (1);
+	}
+	data->all_threads_exited = 1;
+	if (pthread_join(s_id, NULL))
+		return (1);
+	return (0);
+}
+
 int	create_threads(t_philo *data, pthread_t *ids, pthread_t starving_time_id)
 {
 	int	i;
@@ -32,14 +45,21 @@ int	create_threads(t_philo *data, pthread_t *ids, pthread_t starving_time_id)
 	while (i < data->philos_num)
 	{
 		if (pthread_create(&(ids[i++]), NULL, (void *) philos_life, data))
+		{
+			ft_lstclear(&(data->head));
 			return (1);
+		}
 	}
 	simulation_started(data);
 	if (pthread_create(&starving_time_id, NULL, (void *) meals_time, data))
+	{
+		ft_lstclear(&(data->head));
 		return (1);
-	while (i)
-		pthread_join(ids[--i], NULL);
-	data->all_threads_exited = 1;
-	pthread_join(starving_time_id, NULL);
+	}
+	if (waiting_for_threads(data, ids, starving_time_id, i))
+	{
+		ft_lstclear(&(data->head));
+		return (1);
+	}
 	return (0);
 }
