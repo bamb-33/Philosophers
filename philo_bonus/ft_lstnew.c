@@ -1,31 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_lstnew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/20 12:28:29 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/29 12:28:37 by naadou           ###   ########.fr       */
+/*   Created: 2023/11/04 16:23:55 by naadou            #+#    #+#             */
+/*   Updated: 2024/02/24 10:42:44 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-int	main(int ac, char *av[])
+t_to_free	*ft_lstnew(void *content)
 {
-	t_philo	*data;
+	t_to_free	*new_node;
 
-	if (ac > 6 || ac < 5)
-	{
-		printf("invalid number of arguments\n");
-		return (1);
-	}
-	data = init(av);
-	if (!data)
-		return (1);
-	if (create_threads(data, data->ids, data->starving_time_id))
-		return (1);
-	ft_lstclear(&(data->head));
-	return (0);
+	if (!content)
+		return (NULL);
+	new_node = (t_to_free *) malloc (sizeof(t_to_free));
+	if (!new_node)
+		return (NULL);
+	new_node->content = content;
+	new_node->next = NULL;
+	return (new_node);
 }

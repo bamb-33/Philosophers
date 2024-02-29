@@ -1,31 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_lstclear.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/20 12:28:29 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/29 12:28:37 by naadou           ###   ########.fr       */
+/*   Created: 2023/11/05 12:44:33 by naadou            #+#    #+#             */
+/*   Updated: 2024/02/24 10:28:21 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-int	main(int ac, char *av[])
+void	ft_lstclear(t_to_free **lst)
 {
-	t_philo	*data;
+	t_to_free	*tmp;
 
-	if (ac > 6 || ac < 5)
+	if (!lst || !(*lst))
+		return ;
+	while (*lst)
 	{
-		printf("invalid number of arguments\n");
-		return (1);
+		tmp = *lst;
+		free (tmp->content);
+		*lst = (*lst)->next;
+		free(tmp);
 	}
-	data = init(av);
-	if (!data)
-		return (1);
-	if (create_threads(data, data->ids, data->starving_time_id))
-		return (1);
-	ft_lstclear(&(data->head));
-	return (0);
+	*lst = NULL;
 }

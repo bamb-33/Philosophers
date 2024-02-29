@@ -1,31 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   get_current_time.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/20 12:28:29 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/29 12:28:37 by naadou           ###   ########.fr       */
+/*   Created: 2024/02/22 09:40:57 by naadou            #+#    #+#             */
+/*   Updated: 2024/02/24 20:42:13 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-int	main(int ac, char *av[])
+long int	get_current_time(struct timeval *time_start)
 {
-	t_philo	*data;
+	struct timeval	current_time;
+	long int		time_in_micro_s;
 
-	if (ac > 6 || ac < 5)
+	if (gettimeofday(&current_time, NULL))
 	{
-		printf("invalid number of arguments\n");
-		return (1);
+		printf("gettimeofday failed\n");
+		return (-1);
 	}
-	data = init(av);
-	if (!data)
-		return (1);
-	if (create_threads(data, data->ids, data->starving_time_id))
-		return (1);
-	ft_lstclear(&(data->head));
-	return (0);
+	time_in_micro_s = (current_time.tv_sec * 1e6 + current_time.tv_usec)
+		- (time_start->tv_sec * 1e6 + time_start->tv_usec);
+	return (time_in_micro_s / 1000);
 }

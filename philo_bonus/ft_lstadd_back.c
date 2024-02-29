@@ -1,31 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/20 12:28:29 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/29 12:28:37 by naadou           ###   ########.fr       */
+/*   Created: 2023/11/05 11:43:40 by naadou            #+#    #+#             */
+/*   Updated: 2024/02/24 10:24:48 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-int	main(int ac, char *av[])
+void	ft_lstadd_back(t_to_free **lst, t_to_free *new)
 {
-	t_philo	*data;
+	t_to_free	*tmp;
 
-	if (ac > 6 || ac < 5)
+	if (!lst || !new)
+		return ;
+	tmp = *lst;
+	if (*lst)
 	{
-		printf("invalid number of arguments\n");
-		return (1);
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = new;
 	}
-	data = init(av);
-	if (!data)
-		return (1);
-	if (create_threads(data, data->ids, data->starving_time_id))
-		return (1);
-	ft_lstclear(&(data->head));
-	return (0);
+	else
+		*lst = new;
 }
