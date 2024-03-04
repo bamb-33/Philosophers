@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 10:49:32 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/29 14:37:41 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/04 13:10:15 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,8 @@ int	init_3(t_philo *data, t_to_free *head)
 	int		i;
 
 	i = 0;
-	data->forks = (sem_t *) malloc
-		(sizeof(sem_t) * data->philos_num);
+	data->forks = (sem_t **) malloc
+		(sizeof(sem_t *) * data->philos_num);
 	ft_lstadd_back(&head, ft_lstnew(data->forks));
 	if (!data->forks)
 	{
@@ -70,17 +70,10 @@ int	init_3(t_philo *data, t_to_free *head)
 	}
 	while (i < data->philos_num)
 	{
-		if (sem_init(&(data->forks[i++]), NULL))
-		{
-			ft_lstclear(&head);
-			return (1);
-		}
+		data->forks[i] = sem_open(ft_strjoin("/sem_", ft_itoa(i + 1)), O_CREAT | O_EXCL, 0644, 1);
+		i++;
 	}
-	if (sem_init(&(data->lock), NULL))
-	{
-		ft_lstclear(&head);
-		return (1);
-	}
+	data->lock = sem_open("/sem_lock", O_CREAT | O_EXCL, 0644, 1);
 	return (0);
 }
 

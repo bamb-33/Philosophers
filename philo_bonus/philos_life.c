@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 15:06:35 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/29 12:54:23 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/04 18:56:59 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,51 +38,52 @@ void	philosopher_status_printer(t_philo *data, int flag, int i)
 			get_current_time(&(data->time_start)), i + 1);
 }
 
-void	limited_simulation(t_philo *data, int i)
-{
-	int	j;
+// void	limited_simulation(t_philo *data, int i)
+// {
+// 	int	j;
 
-	j = 0;
-	while (j < data->num_of_times_philos_must_eat)
-	{
-		while (data->hash_table[(i + 1) % data->philos_num] == 1)
-			usleep(0);
-		pthread_mutex_lock(&(data->forks[(i + 1) % data->philos_num]));
-		philosopher_status_printer(data, 1, i);
-		pthread_mutex_lock(&(data->forks[i]));
-		gettimeofday(&(data->philos_starving_time[i]), NULL);
-		data->hash_table[i] = 0;
-		philosopher_status_printer(data, 1, i);
-		philosopher_status_printer(data, 2, i);
-		usleep(data->time_to_eat);
-		pthread_mutex_unlock(&(data->forks[i]));
-		pthread_mutex_unlock(&(data->forks[(i + 1) % data->philos_num]));
-		philosopher_status_printer(data, 3, i);
-		usleep(data->time_to_sleep);
-		philosopher_status_printer(data, 4, i);
-		if (data->philo_died == 1)
-			break ;
-		j++;
-	}
-}
+// 	j = 0;
+// 	while (j < data->num_of_times_philos_must_eat)
+// 	{
+// 		while (data->hash_table[(i + 1) % data->philos_num] == 1)
+// 			usleep(0);
+// 		pthread_mutex_lock(&(data->forks[(i + 1) % data->philos_num]));
+// 		philosopher_status_printer(data, 1, i);
+// 		pthread_mutex_lock(&(data->forks[i]));
+// 		gettimeofday(&(data->philos_starving_time[i]), NULL);
+// 		data->hash_table[i] = 0;
+// 		philosopher_status_printer(data, 1, i);
+// 		philosopher_status_printer(data, 2, i);
+// 		usleep(data->time_to_eat);
+// 		pthread_mutex_unlock(&(data->forks[i]));
+// 		pthread_mutex_unlock(&(data->forks[(i + 1) % data->philos_num]));
+// 		philosopher_status_printer(data, 3, i);
+// 		usleep(data->time_to_sleep);
+// 		philosopher_status_printer(data, 4, i);
+// 		if (data->philo_died == 1)
+// 			break ;
+// 		j++;
+// 	}
+// }
 
-void	infinite_simulation(t_philo *data, int i)
+void	infinite_simulation(t_philo *data, int i, int controler)
 {
 	while (1)
 	{
 		philosopher_status_printer(data, 4, i);
-		while (data->hash_table[(i + 1) % data->philos_num] == 1)
-			usleep(0);
-		pthread_mutex_lock(&(data->forks[(i + 1) % data->philos_num]));
+		if (controler % 2 == 1)
+			kill(data->pids[i], SIGSTOP);//NOT WORKING
+		controler++;
+		sem_wait((data->forks[(i + 1) % data->philos_num]));
 		philosopher_status_printer(data, 1, i);
-		pthread_mutex_lock(&(data->forks[i]));
-		gettimeofday(&(data->philos_starving_time[i]), NULL);
-		data->hash_table[i] = 0;
+		sem_wait((data->forks[i]));
+		// gettimeofday(&(data->philos_starving_time[i]), NULL);
+		kill(data->pids[(i + 1) % data->philos_num], SIGCONT);
 		philosopher_status_printer(data, 1, i);
 		philosopher_status_printer(data, 2, i);
 		usleep(data->time_to_eat);
-		pthread_mutex_unlock(&(data->forks[i]));
-		pthread_mutex_unlock(&(data->forks[(i + 1) % data->philos_num]));
+		sem_post((data->forks[(i + 1) % data->philos_num]));
+		sem_post((data->forks[i]));
 		philosopher_status_printer(data, 3, i);
 		usleep(data->time_to_sleep);
 		if (data->philo_died == 1)
@@ -90,21 +91,20 @@ void	infinite_simulation(t_philo *data, int i)
 	}
 }
 
-void	philos_life(void *args)
+void	philos_life(t_philo *data, int i)
 {
-	int		i;
-	t_philo	*data;
+	// sem_wait((data->lock));
+	// printf("%d\n", i);
+	// if (gettimeofday(&(data->philos_starving_time[i]), NULL))
+	// {
+	// 	printf("gettimeofday failed\n");
+	// 	return ;
+	// }
+	// data->simulation_started[i] = 1;
+	// sem_post((data->lock));
+	// exit(0);
 
-	data = (t_philo *) args;
-	pthread_mutex_lock(&(data->lock));
-	i = data->counter++;
-	if (gettimeofday(&(data->philos_starving_time[i]), NULL))
-	{
-		printf("gettimeofday failed\n");
-		return ;
-	}
-	data->simulation_started[i] = 1;
-	pthread_mutex_unlock(&(data->lock));
+
 	if (data->philos_num == 1)
 	{
 		philosopher_status_printer(data, 4, i);
@@ -112,8 +112,8 @@ void	philos_life(void *args)
 			usleep(1);
 	}
 	else if (data->av[5] == NULL)
-		infinite_simulation(data, i);
-	else
-		limited_simulation(data, i);
+		infinite_simulation(data, i, i);
+	// else
+	// 	limited_simulation(data, i, i);
 	data->thread_exited[i] = 1;
 }

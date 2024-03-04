@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   threads.c                                          :+:      :+:    :+:   */
+/*   processes.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 12:38:24 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/29 14:41:44 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/04 17:32:19 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	waiting_for_threads(t_philo *data, pthread_t *ids, pthread_t s_id, int i)
 	return (0);
 }
 
-int	create_processes(t_philo *data, pthread_t *pids, pthread_t starving_time_id)
+int	create_processes(t_philo *data,pid_t *pids, pid_t starving_time_id)
 {
 	int	i;
 
@@ -46,19 +46,16 @@ int	create_processes(t_philo *data, pthread_t *pids, pthread_t starving_time_id)
 	{
 		pids[i] = fork();
 		if (!pids[i])
-			philos_life();
+		{
+			philos_life(data, i);
+			exit(0);//doing this instead of the if else statment
+		}
 		i++;
 	}
-	simulation_started(data);
-	if (pthread_create(&starving_time_id, NULL, (void *) meals_time, data))
-	{
-		ft_lstclear(&(data->head));
-		return (1);
-	}
-	if (waiting_for_threads(data, ids, starving_time_id, i))
-	{
-		ft_lstclear(&(data->head));
-		return (1);
-	}
+	// simulation_started(data);
+	starving_time_id = fork();
+	if (!starving_time_id)
+		meals_time(data);
+	//function to wait for all processes.
 	return (0);
 }

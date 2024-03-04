@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 12:28:47 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/29 14:35:10 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/04 18:40:22 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define HEADER_H
 
 # include <pthread.h>
+# include <semaphore.h>
+# include <signal.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -30,8 +32,8 @@ typedef struct s_philo
 {
 	pid_t			*pids;
 	pid_t			starving_time_id;
-	sem_t			*forks;
-	sem_t			lock;
+	sem_t			**forks;
+	sem_t			*lock;
 	struct timeval	time_start;
 	struct timeval	*philos_starving_time;
 	t_to_free		*head;
@@ -50,11 +52,12 @@ typedef struct s_philo
 }	t_philo;
 
 int			ft_atoi(const char *str);
+char		*ft_strjoin(char const *s1, char const *s2);
+char		*ft_itoa(int n);
 t_philo		*init(char *av[]);
-int			create_threads(t_philo *data,
-				pthread_t *ids, pthread_t starving_time_id);
-void		philos_life(void *args);
-void		meals_time(void *args);
+int			create_processes(t_philo *data,pid_t *pids, pid_t starving_time_id);
+void		philos_life(t_philo *data, int i);
+void		meals_time(t_philo *data);
 long int	get_current_time(struct timeval *time_start);
 void		philosopher_status_printer(t_philo *data, int flag, int i);
 
