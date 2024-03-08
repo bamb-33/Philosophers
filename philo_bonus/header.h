@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 12:28:47 by naadou            #+#    #+#             */
-/*   Updated: 2024/03/07 14:37:07 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/08 18:19:46 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,15 @@ typedef struct s_philo
 	sem_t			*forks;
 	sem_t			*lock;
 	struct timeval	time_start;
-	struct timeval	*philos_starving_time;
+	struct timeval	philos_starving_time;
 	t_to_free		*head;
 	int				philos_num;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				num_of_times_philos_must_eat;
-	int				counter;
-	int				*simulation_started;
-	int				all_threads_exited;
-	int				philo_died;
-	int				*hash_table;
-	int				*thread_exited;
+	int				thread_exited;
+	int				philos_index;
 	char			**av;
 }	t_philo;
 
