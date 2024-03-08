@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 12:28:47 by naadou            #+#    #+#             */
-/*   Updated: 2024/03/04 18:40:22 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/07 14:37:07 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef struct s_philo
 {
 	pid_t			*pids;
 	pid_t			starving_time_id;
-	sem_t			**forks;
+	sem_t			*forks;
 	sem_t			*lock;
 	struct timeval	time_start;
 	struct timeval	*philos_starving_time;

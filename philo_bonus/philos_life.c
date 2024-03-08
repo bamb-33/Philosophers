@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 15:06:35 by naadou            #+#    #+#             */
-/*   Updated: 2024/03/04 18:56:59 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/08 15:27:19 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,6 @@
 
 void	philosopher_status_printer(t_philo *data, int flag, int i)
 {
-	long int	current_time;
-
-	current_time = get_current_time(&(data->time_start));
-	if (current_time == -1)
-	{
-		data->philo_died = 1;
-		return ;
-	}
 	if (data->philo_died == 1)
 		return ;
 	if (flag == 1)
@@ -68,52 +60,57 @@ void	philosopher_status_printer(t_philo *data, int flag, int i)
 
 void	infinite_simulation(t_philo *data, int i, int controler)
 {
-	while (1)
+	int j;
+	// struct timeval tv;
+
+	j = 0;
+	while (j < 1)
 	{
 		philosopher_status_printer(data, 4, i);
-		if (controler % 2 == 1)
-			kill(data->pids[i], SIGSTOP);//NOT WORKING
-		controler++;
-		sem_wait((data->forks[(i + 1) % data->philos_num]));
+		// usleep(data->time_to_die);
+		// gettimeofday(&tv, 0);
+		// if (controler % 2 == 1)
+		// {
+		// 	// usleep(500);
+		// 	controler++;
+		// }
+		// else
+		// 	controler--;
+		sem_wait(data->forks);
 		philosopher_status_printer(data, 1, i);
-		sem_wait((data->forks[i]));
+		sem_wait(data->forks);
 		// gettimeofday(&(data->philos_starving_time[i]), NULL);
-		kill(data->pids[(i + 1) % data->philos_num], SIGCONT);
 		philosopher_status_printer(data, 1, i);
 		philosopher_status_printer(data, 2, i);
 		usleep(data->time_to_eat);
-		sem_post((data->forks[(i + 1) % data->philos_num]));
-		sem_post((data->forks[i]));
+		// while (1);
+		sem_post(data->forks);
+		sem_post(data->forks);
 		philosopher_status_printer(data, 3, i);
 		usleep(data->time_to_sleep);
-		if (data->philo_died == 1)
-			break ;
+		// if (data->philo_died == 1)
+		// 	break ;
+		j++;
 	}
 }
 
 void	philos_life(t_philo *data, int i)
 {
-	// sem_wait((data->lock));
-	// printf("%d\n", i);
-	// if (gettimeofday(&(data->philos_starving_time[i]), NULL))
+	printf("%ld\n", get_current_time(&(data->time_start)));
+	// if (gettimeofday(&(data->time_start), NULL))
 	// {
-	// 	printf("gettimeofday failed\n");
-	// 	return ;
+	// 	ft_lstclear(&(data->head));
+	// 	exit (1);
 	// }
-	// data->simulation_started[i] = 1;
-	// sem_post((data->lock));
-	// exit(0);
-
-
-	if (data->philos_num == 1)
-	{
-		philosopher_status_printer(data, 4, i);
-		while (data->philo_died == 0)
-			usleep(1);
-	}
-	else if (data->av[5] == NULL)
-		infinite_simulation(data, i, i);
+	// if (data->philos_num == 1)
+	// {
+	// 	philosopher_status_printer(data, 4, i);
+	// 	while (data->philo_died == 0)
+	// 		usleep(1);
+	// }
+	// else if (data->av[5] == NULL)
+	// infinite_simulation(data, i, i);
 	// else
 	// 	limited_simulation(data, i, i);
-	data->thread_exited[i] = 1;
+	// data->thread_exited[i] = 1;
 }
