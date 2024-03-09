@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 12:28:47 by naadou            #+#    #+#             */
-/*   Updated: 2024/03/08 18:19:46 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/09 18:54:33 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct s_philo
 	pid_t			starving_time_id;
 	sem_t			*forks;
 	sem_t			*lock;
+	pthread_t		t_id;
 	struct timeval	time_start;
 	struct timeval	philos_starving_time;
 	t_to_free		*head;
@@ -43,19 +44,25 @@ typedef struct s_philo
 	int				time_to_sleep;
 	int				num_of_times_philos_must_eat;
 	int				thread_exited;
+	int				philo_died;
 	int				philos_index;
 	char			**av;
 }	t_philo;
 
-int			ft_atoi(const char *str);
-char		*ft_strjoin(char const *s1, char const *s2);
-char		*ft_itoa(int n);
+int			ft_atoi(const char *str, t_to_free *head);
+
 t_philo		*init(char *av[]);
 int			create_processes(t_philo *data,pid_t *pids, pid_t starving_time_id);
+
 void		philos_life(t_philo *data, int i);
 void		meals_time(t_philo *data);
-long int	get_current_time(struct timeval *time_start);
+long int	get_current_time(struct timeval *time_start, t_philo *data);
 void		philosopher_status_printer(t_philo *data, int flag, int i);
+
+sem_t 		*w_sem_open(const char *name, unsigned int value, t_to_free *head);
+void		*w_malloc(size_t size, t_to_free *head);
+void		w_gettimeofday(struct timeval *restrict tp, void *restrict tzp, t_to_free *head);
+pid_t		w_fork(t_philo *data, int i);
 
 void		ft_lstadd_back(t_to_free **lst, t_to_free *new);
 void		ft_lstclear(t_to_free **lst);

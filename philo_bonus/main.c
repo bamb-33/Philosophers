@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 12:28:29 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/29 14:38:29 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/09 18:58:42 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ int	main(int ac, char *av[])
 		return (1);
 	}
 	data = init(av);
-	if (!data)
-		return (1);
 	if (create_processes(data, data->pids, data->starving_time_id))
 		return (1);
 	ft_lstclear(&(data->head));
