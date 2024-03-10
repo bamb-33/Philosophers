@@ -23,7 +23,6 @@ void exit_status(t_philo *data)
 		status = WEXITSTATUS(status);
 	if (status == 1)
 	{
-		printf("i got the status \n");
 		while (i < data->philos_num)
 			kill(data->pids[i++], SIGTERM);
 	}
@@ -42,10 +41,8 @@ int	create_processes(t_philo *data, pid_t *pids, pid_t starving_time_id)
 {
 	struct timeval tv;
 	int	i;
-	int j;
 
 	i = 0;
-	j = 0;
 	w_gettimeofday(&(data->time_start), NULL, data->head);
 	w_gettimeofday(&(data->philos_starving_time), NULL, data->head);
 	while (i < data->philos_num)
@@ -57,13 +54,12 @@ int	create_processes(t_philo *data, pid_t *pids, pid_t starving_time_id)
 			ft_lstclear(&(data->head));
 			exit(0);
 		}
+		usleep(50);
 		i++;
 	}
 	exit_status(data);
 	wait_for_p(data, pids);
-	sem_unlink("/lock");
 	sem_unlink("/sem");
 	sem_close(data->forks);
-	sem_close(data->lock);
 	return (0);
 }

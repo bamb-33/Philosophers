@@ -30,7 +30,7 @@ void	philosopher_status_printer(t_philo *data, int flag, int i)
 			get_current_time(&(data->time_start), data), i + 1);
 }
 
-void	limited_simulation(t_philo *data, int i)
+void	limited_simulation(t_philo *data, int i, int controler)
 {
 	int	j;
 
@@ -39,10 +39,21 @@ void	limited_simulation(t_philo *data, int i)
 	while (j < data->num_of_times_philos_must_eat)
 	{
 		philosopher_status_printer(data, 4, i);
+		if (controler == 0)
+		{
+			if (data->philos_num % 2 == 1)
+				usleep(data->time_to_eat);
+			else
+				usleep (500);
+		}
+		else
+			controler = 0;
 		sem_wait(data->forks);
 		philosopher_status_printer(data, 1, i);
 		sem_wait(data->forks);
+		sem_wait(data->lock);
 		w_gettimeofday(&(data->philos_starving_time), NULL, data->head);
+		sem_post(data->lock);
 		philosopher_status_printer(data, 1, i);
 		philosopher_status_printer(data, 2, i);
 		usleep(data->time_to_eat);
@@ -56,16 +67,27 @@ void	limited_simulation(t_philo *data, int i)
 	}
 }
 
-void	infinite_simulation(t_philo *data, int i)
+void	infinite_simulation(t_philo *data, int i, int controler)
 {
 	pthread_create(&(data->t_id), NULL, (void *) meals_time, data);
 	while (1)
 	{
 		philosopher_status_printer(data, 4, i);
+		if (controler == 0)
+		{
+			if (data->philos_num % 2 == 1)
+				usleep(data->time_to_eat);
+			else
+				usleep (500);
+		}
+		else
+			controler = 0;
 		sem_wait(data->forks);
 		philosopher_status_printer(data, 1, i);
 		sem_wait(data->forks);
+		sem_wait(data->lock);
 		w_gettimeofday(&(data->philos_starving_time), NULL, data->head);
+		sem_post(data->lock);
 		philosopher_status_printer(data, 1, i);
 		philosopher_status_printer(data, 2, i);
 		usleep(data->time_to_eat);
@@ -80,7 +102,14 @@ void	infinite_simulation(t_philo *data, int i)
 
 void	philos_life(t_philo *data, int i)
 {
+	int controler;
+
 	data->philos_index = i;
+	if (i < data->philos_num / 2)
+		controler = 1;
+	else
+		controler = 0;
+	data->lock = w_sem_open("/sem_lock", 1, data->head);
 	if (data->philos_num == 1)
 	{
 		philosopher_status_printer(data, 4, i);
@@ -89,14 +118,11 @@ void	philos_life(t_philo *data, int i)
 		exit(0);
 	}
 	else if (data->av[5] == NULL)
-		infinite_simulation(data, i);
+		infinite_simulation(data, i, i);
 	else
-		limited_simulation(data, i);
+		limited_simulation(data, i, controler);
 	data->thread_exited = 1;
+	sem_unlink("/sem_lock");
+	sem_close(data->lock);
 	pthread_join(data->t_id, NULL);
-	if (data->philo_died == 1)
-	{
-		exit(1);
-	}
-	exit(0);
 }
