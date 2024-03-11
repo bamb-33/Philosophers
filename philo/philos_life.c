@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 15:06:35 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/29 12:54:23 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/07 12:27:07 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	infinite_simulation(t_philo *data, int i)
 		philosopher_status_printer(data, 2, i);
 		usleep(data->time_to_eat);
 		pthread_mutex_unlock(&(data->forks[i]));
-		pthread_mutex_unlock(&(data->forks[(i + 1) % data->philos_num]));
+		pthread_mutex_unlock(&(data->forks[(i + 1) % data->philos_num]));//try to unlock the fork on your right first mybe it will optimise stuff
 		philosopher_status_printer(data, 3, i);
 		usleep(data->time_to_sleep);
 		if (data->philo_died == 1)

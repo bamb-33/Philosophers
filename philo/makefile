@@ -9,7 +9,7 @@ NAME = philo
 all: $(NAME)
 
 $(NAME): $(SRC)
-	$(CC) $(CFLAGS) $(SRC) -lpthread -o $(NAME)
+	$(CC) $(CFLAGS) $(SRC) -lpthread -fsanitize=thread -o $(NAME)
 
 clean:
 	rm -f $(OBJ)
