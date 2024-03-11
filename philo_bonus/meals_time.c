@@ -16,12 +16,16 @@ void	meals_time(t_philo *data)
 {
 	while (!data->thread_exited)
 	{
+		sem_wait(data->lock);
 		if (get_current_time(&(data->philos_starving_time), data) > data->time_to_die)
 		{
-			printf("%ld %d  died\n", get_current_time(&(data->time_start), data), data->philos_index + 1);
-			//use lock when you try to change this to avoid data races i guess
 			data->philo_died = 1;
+			usleep(500);
+			printf("%ld %d  died\n", get_current_time(&(data->time_start), data), data->philos_index + 1);
+			sem_unlink("/sem_lock");
+			sem_close(data->lock);
 			exit(1);
 		}
+		sem_post(data->lock);
 	}
 }

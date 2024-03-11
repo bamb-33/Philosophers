@@ -25,12 +25,13 @@ void	meals_time(void *args)
 		current_time = get_current_time(&(data->time_start));
 		if (current_time == -1)
 		{
-			data->philo_died = 1;
+			printf("gettimeofday failed\n");
 			break ;
 		}
-		if (current_time > data->time_to_die && !data->thread_exited[i])
+		if (get_current_time(&(data->philos_starving_time[i])) > data->time_to_die && !data->thread_exited[i])
 		{
 			data->philo_died = 1;
+			usleep(500);
 			printf("%ld %d  died\n", current_time, i + 1);
 			break ;
 		}

@@ -21,6 +21,9 @@
 # include <string.h>
 # include <unistd.h>
 # include <sys/time.h>
+# include <fcntl.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 
 typedef struct s_to_free
 {

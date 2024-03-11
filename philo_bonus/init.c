@@ -32,7 +32,6 @@ void	init_2(t_philo *data, t_to_free *head)
 void	init_3(t_philo *data)
 {
 	data->forks = w_sem_open("/sem", data->philos_num, data->head);
-	data->lock = w_sem_open("/sem_lock", 1, data->head);
 }
 
 int	init_4(t_philo *data, char *av[])

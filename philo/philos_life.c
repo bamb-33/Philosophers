@@ -45,6 +45,7 @@ void	limited_simulation(t_philo *data, int i)
 	j = 0;
 	while (j < data->num_of_times_philos_must_eat)
 	{
+		philosopher_status_printer(data, 4, i);
 		while (data->hash_table[(i + 1) % data->philos_num] == 1)
 			usleep(0);
 		pthread_mutex_lock(&(data->forks[(i + 1) % data->philos_num]));
@@ -59,7 +60,6 @@ void	limited_simulation(t_philo *data, int i)
 		pthread_mutex_unlock(&(data->forks[(i + 1) % data->philos_num]));
 		philosopher_status_printer(data, 3, i);
 		usleep(data->time_to_sleep);
-		philosopher_status_printer(data, 4, i);
 		if (data->philo_died == 1)
 			break ;
 		j++;
