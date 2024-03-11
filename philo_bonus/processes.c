@@ -6,16 +6,16 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 12:38:24 by naadou            #+#    #+#             */
-/*   Updated: 2024/03/09 18:44:14 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/11 11:43:31 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-void exit_status(t_philo *data)
+void	exit_status(t_philo *data)
 {
-	int status;
-	int i;
+	int	status;
+	int	i;
 
 	i = 0;
 	waitpid(-1, &status, 0);
@@ -23,6 +23,7 @@ void exit_status(t_philo *data)
 		status = WEXITSTATUS(status);
 	if (status == 1)
 	{
+		printf("got the status\n");
 		while (i < data->philos_num)
 			kill(data->pids[i++], SIGTERM);
 	}
@@ -30,17 +31,16 @@ void exit_status(t_philo *data)
 
 void	wait_for_p(t_philo *data, pid_t *pids)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < data->philos_num)
 		waitpid(pids[i++], 0, 0);
 }
 
-int	create_processes(t_philo *data, pid_t *pids, pid_t starving_time_id)
+void	create_processes(t_philo *data, pid_t *pids, pid_t starving_time_id)
 {
-	struct timeval tv;
-	int	i;
+	int				i;
 
 	i = 0;
 	w_gettimeofday(&(data->time_start), NULL, data->head);
@@ -61,5 +61,6 @@ int	create_processes(t_philo *data, pid_t *pids, pid_t starving_time_id)
 	wait_for_p(data, pids);
 	sem_unlink("/sem");
 	sem_close(data->forks);
-	return (0);
+	sem_unlink("/death_sem");
+	sem_close(data->death_announcer_lock);
 }

@@ -6,13 +6,13 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 18:00:03 by naadou            #+#    #+#             */
-/*   Updated: 2024/03/09 18:55:16 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/11 10:00:28 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-sem_t 	*w_sem_open(const char *name, unsigned int value, t_to_free *head)
+sem_t	*w_sem_open(const char *name, unsigned int value, t_to_free *head)
 {
 	sem_t	*result;
 
@@ -40,7 +40,8 @@ void	*w_malloc(size_t size, t_to_free *head)
 	return (result);
 }
 
-void	w_gettimeofday(struct timeval *restrict tp, void *restrict tzp, t_to_free *head)
+void	w_gettimeofday(struct timeval *restrict tp,
+			void *restrict tzp, t_to_free *head)
 {
 	if (gettimeofday(tp, tzp))
 	{
@@ -54,7 +55,7 @@ pid_t	w_fork(t_philo *data, int i)
 {
 	pid_t	result;
 
-	result =  fork();
+	result = fork();
 	if (result < 0)
 	{
 		printf("fork failed\n");
