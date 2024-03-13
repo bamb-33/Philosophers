@@ -102,7 +102,7 @@ void	philos_life(t_philo *data, int i)
 	if (data->philos_num == 1)
 	{
 		philosopher_status_printer(data, 4, i);
-		while (1)
+		while (!philo_died(data, 0))
 			usleep(0);
 	}
 	else if (data->av[5] == NULL)

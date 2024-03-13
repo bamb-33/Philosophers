@@ -20,7 +20,8 @@ t_philo	*init(char *av[])
 
 	data = (t_philo *) w_malloc (sizeof(t_philo), head);
 	head = NULL;
-	head = ft_lstnew(data, head);
+	head = ft_lstnew(data, head); //it looks like when i free my struct before freeing its content
+									 // that's problem even tho i am still saving the adds of what allocated
 	data->philos_num = ft_atoi(av[1], head);
 	data->time_to_die = ft_atoi(av[2], head);
 	data->time_to_eat = ft_atoi(av[3], head) * 1000;
