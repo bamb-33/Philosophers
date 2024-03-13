@@ -14,6 +14,7 @@
 
 t_philo	*init(char *av[])
 {
+	char *str = (char *) malloc (8 * sizeof(char));
 	t_philo		*data;
 	t_to_free	*head;
 
@@ -29,10 +30,10 @@ t_philo	*init(char *av[])
 	data->pids = (pid_t *) w_malloc (sizeof(pid_t) * data->philos_num, head);
 	ft_lstadd_back(&head, ft_lstnew(data->pids, head));
 	data->forks = w_sem_open("/sem", data->philos_num, head);
-	data->death_announcer_lock = w_sem_open("/death_sem", 1, head);
 	data->head = head;
 	data->av = av;
 	data->thread_exited = 0;
+	data->gtod_failed = 0;
 	data->philo_died = 0;
 	return (data);
 }

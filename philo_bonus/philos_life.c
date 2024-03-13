@@ -12,9 +12,9 @@
 
 #include "header.h"
 
-void	philosopher_status_printer(t_philo *data, int flag, int i)
+void	philosopher_status_printer(t_philo *data, int flag, int i)//writing i guess
 {
-	if (data->philo_died == 1)
+	if (philo_died(data, 0))
 		return ;
 	if (flag == 1)
 		printf("%ld %d has taken a fork\n",
@@ -44,9 +44,7 @@ void	limited_simulation(t_philo *data, int i, int controler)
 		sem_wait(data->forks);
 		philosopher_status_printer(data, 1, i);
 		sem_wait(data->forks);
-		sem_wait(data->lock);
-		w_gettimeofday(&(data->philos_starving_time), NULL, data->head);
-		sem_post(data->lock);
+		w_gettimeofday(&(data->philos_starving_time), NULL, data);
 		philosopher_status_printer(data, 1, i);
 		philosopher_status_printer(data, 2, i);
 		usleep(data->time_to_eat);
@@ -54,6 +52,8 @@ void	limited_simulation(t_philo *data, int i, int controler)
 		sem_post(data->forks);
 		philosopher_status_printer(data, 3, i);
 		usleep(data->time_to_sleep);
+		if (philo_died(data, 0))
+			break;
 		j++;
 	}
 }
@@ -70,7 +70,7 @@ void	infinite_simulation(t_philo *data, int i, int controler)
 		philosopher_status_printer(data, 1, i);
 		sem_wait(data->forks);
 		sem_wait(data->lock);
-		w_gettimeofday(&(data->philos_starving_time), NULL, data->head);
+		w_gettimeofday(&(data->philos_starving_time), NULL, data);//writing
 		sem_post(data->lock);
 		philosopher_status_printer(data, 1, i);
 		philosopher_status_printer(data, 2, i);
@@ -79,6 +79,8 @@ void	infinite_simulation(t_philo *data, int i, int controler)
 		sem_post(data->forks);
 		philosopher_status_printer(data, 3, i);
 		usleep(data->time_to_sleep);
+		if (philo_died(data, 0))
+			break;
 	}
 }
 
@@ -92,7 +94,11 @@ void	philos_life(t_philo *data, int i)
 	else
 		controler = 0;
 	data->lock = w_sem_open("/sem_lock", 1, data->head);
-	pthread_create(&(data->t_id), NULL, (void *) meals_time, data);
+	data->gtod_lock = w_sem_open("/sem_gtod_lock", 1, data->head);
+	data->gtod_lockv2 = w_sem_open("/sem_gtod_lockv2", 1, data->head);
+	data->t_exited_lock = w_sem_open("/sem_t_exited_lock", 1, data->head);
+	data->philo_died_lock = w_sem_open("/sem_philo_died_lock", 1, data->head);
+	pthread_create(&(data->t_id), NULL, (void *) meals_time, data);//start of the thread
 	if (data->philos_num == 1)
 	{
 		philosopher_status_printer(data, 4, i);
@@ -103,8 +109,28 @@ void	philos_life(t_philo *data, int i)
 		infinite_simulation(data, i, controler);
 	else
 		limited_simulation(data, i, controler);
-	data->thread_exited = 1;
+	thread_exited(data, 1);//writing
 	pthread_join(data->t_id, NULL);
 	sem_unlink("/sem_lock");
 	sem_close(data->lock);
+	sem_unlink("/sem_gtod_lock");
+	sem_close(data->gtod_lock);
+	sem_unlink("/sem_gtod_lockv2");
+	sem_close(data->gtod_lockv2);
+	sem_unlink("/sem_t_thread_lock");
+	sem_close(data->t_exited_lock);
+	if (philo_died(data, 0) == 1)
+	{
+		sem_unlink("/sem_philo_died_lock");
+		sem_close(data->philo_died_lock);
+		ft_lstclear(&(data->head));
+		exit(1);
+	}
+	else
+	{
+		sem_unlink("/sem_philo_died_lock");
+		sem_close(data->philo_died_lock);
+		ft_lstclear(&(data->head));
+		exit(0);
+	}
 }

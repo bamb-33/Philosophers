@@ -14,24 +14,16 @@
 
 void	meals_time(t_philo *data)
 {
-	while (!data->thread_exited)
+	while (!thread_exited(data, 0) && !gtod_failed(data, 0))
 	{
-		sem_wait(data->lock);
-		if (get_current_time(&(data->philos_starving_time), data)
+		// printf("%ld\n", get_current_time(&(data->philos_starving_time), data));
+		if (get_current_time(&(data->philos_starving_time), data)//writing
 			> data->time_to_die)
 		{
-			data->philo_died = 1;
-			// sem_wait(data->death_announcer_lock);
-			// usleep(1000);
+			philo_died(data, 1);//
 			printf("%ld %d died\n", get_current_time(&(data->time_start), data),
-				data->philos_index + 1);
-			// sem_post(data->death_announcer_lock);
-			sem_post(data->lock);
-			sem_unlink("/sem_lock");
-			sem_close(data->lock);
-			ft_lstclear(&(data->head));
-			exit(1);
+				data->philos_index + 1);//writing
+			break;
 		}
-		sem_post(data->lock);
 	}
 }

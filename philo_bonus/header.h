@@ -37,7 +37,10 @@ typedef struct s_philo
 	pid_t			starving_time_id;
 	sem_t			*forks;
 	sem_t			*lock;
-	sem_t			*death_announcer_lock;
+	sem_t			*gtod_lock;
+	sem_t			*gtod_lockv2;
+	sem_t			*t_exited_lock;
+	sem_t			*philo_died_lock;
 	pthread_t		t_id;
 	struct timeval	time_start;
 	struct timeval	philos_starving_time;
@@ -48,6 +51,7 @@ typedef struct s_philo
 	int				time_to_sleep;
 	int				num_of_times_philos_must_eat;
 	int				thread_exited;
+	int				gtod_failed;
 	int				philo_died;
 	int				philos_index;
 	char			**av;
@@ -67,8 +71,14 @@ void		philosopher_status_printer(t_philo *data, int flag, int i);
 sem_t		*w_sem_open(const char *name, unsigned int value, t_to_free *head);
 void		*w_malloc(size_t size, t_to_free *head);
 void		w_gettimeofday(struct timeval *restrict tp,
-				void *restrict tzp, t_to_free *head);
+				void *restrict tzp, t_philo *data);
+void		w_gettimeofday_1(struct timeval *restrict tp,
+				void *restrict tzp, t_philo *data);
 pid_t		w_fork(t_philo *data, int i);
+
+int    		gtod_failed(t_philo *data, int flag);
+int    		thread_exited(t_philo *data, int flag);
+int 		philo_died(t_philo *data, int flag);
 
 void		ft_lstadd_back(t_to_free **lst, t_to_free *new);
 void		ft_lstclear(t_to_free **lst);
