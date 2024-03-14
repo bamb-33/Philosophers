@@ -76,7 +76,40 @@ int	init_3(t_philo *data, t_to_free *head)
 			return (1);
 		}
 	}
-	if (pthread_mutex_init(&(data->lock), NULL))
+	return (0);
+}
+
+int	init_3_5(t_philo *data, t_to_free *head)
+{
+	int	i;
+	int	error;
+
+	i = 0;
+	error = 0;
+	error += pthread_mutex_init(&(data->counter_lock), NULL);
+	error += pthread_mutex_init(&(data->philo_died_lock), NULL);
+	error += pthread_mutex_init(&(data->a_t_exited_lock), NULL);
+	data->h_table_lock = (pthread_mutex_t *) malloc
+		(sizeof(pthread_mutex_t) * data->philos_num);
+	ft_lstadd_back(&head, ft_lstnew(data->h_table_lock));
+	data->thread_exited_lock = (pthread_mutex_t *) malloc
+		(sizeof(pthread_mutex_t) * data->philos_num);
+	ft_lstadd_back(&head, ft_lstnew(data->thread_exited_lock));
+	data->s_started_lock = (pthread_mutex_t *) malloc
+		(sizeof(pthread_mutex_t) * data->philos_num);
+	ft_lstadd_back(&head, ft_lstnew(data->s_started_lock));
+	data->s_time_lock = (pthread_mutex_t *) malloc
+		(sizeof(pthread_mutex_t) * data->philos_num);
+	ft_lstadd_back(&head, ft_lstnew(data->s_time_lock));
+	while (i < data->philos_num)
+	{
+		error += pthread_mutex_init(&(data->h_table_lock[i]), NULL);
+		error += pthread_mutex_init(&(data->thread_exited_lock[i]), NULL);
+		error += pthread_mutex_init(&(data->s_started_lock[i]), NULL);
+		error += pthread_mutex_init(&(data->s_time_lock[i]), NULL);
+		i++;
+	}
+	if (!data->h_table_lock || !data->thread_exited_lock || !data->s_started_lock || error > 0)
 	{
 		ft_lstclear(&head);
 		return (1);
@@ -103,6 +136,7 @@ int	init_4(t_philo *data, char *av[])
 	data->counter = 0;
 	data->philo_died = 0;
 	data->all_threads_exited = 0;
+	data->gtod_failed = 0;
 	if (gettimeofday(&(data->time_start), NULL))
 	{
 		ft_lstclear(&(data->head));
@@ -128,6 +162,8 @@ t_philo	*init(char *av[])
 	if (init_2(data, head))
 		return (NULL);
 	if (init_3(data, head))
+		return (NULL);
+	if(init_3_5(data, head))
 		return (NULL);
 	if (init_4(data, av))
 		return (NULL);

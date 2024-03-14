@@ -1,7 +1,7 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-SRC = main.c ft_atoi.c philos_life.c meals_time.c get_current_time.c ft_lstadd_back.c ft_lstclear.c ft_lstnew.c init.c threads.c
+SRC = main.c ft_atoi.c philos_life.c meals_time.c get_current_time.c ft_lstadd_back.c ft_lstclear.c ft_lstnew.c init.c threads.c lock_functions.c
 
 OBJ = $(SRC:.c=.o)
 NAME = philo
@@ -9,7 +9,7 @@ NAME = philo
 all: $(NAME)
 
 $(NAME): $(SRC)
-	$(CC) $(CFLAGS) $(SRC) -lpthread -fsanitize=thread -o $(NAME)
+	$(CC) $(CFLAGS) $(SRC) -lpthread  -o $(NAME)
 
 clean:
 	rm -f $(OBJ)

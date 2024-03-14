@@ -12,14 +12,14 @@
 
 #include "header.h"
 
-void	simulation_started(t_philo *data)
+void	create_meals_thread(t_philo *data)
 {
 	int	i;
 
 	i = 0;
 	while (i < data->philos_num)
 	{
-		if (data->simulation_started[i])
+		if (simulation_started(data, i, 0))
 			i++;
 	}
 }
@@ -31,7 +31,7 @@ int	waiting_for_threads(t_philo *data, pthread_t *ids, pthread_t s_id, int i)
 		if (pthread_join(ids[--i], NULL))
 			return (1);
 	}
-	data->all_threads_exited = 1;
+	all_threads_exited(data, 1);
 	if (pthread_join(s_id, NULL))
 		return (1);
 	return (0);
@@ -46,11 +46,13 @@ int	create_threads(t_philo *data, pthread_t *ids, pthread_t starving_time_id)
 	{
 		if (pthread_create(&(ids[i++]), NULL, (void *) philos_life, data))
 		{
-			ft_lstclear(&(data->head));// you have to detach all the threads that got created before exiting
+			philo_died(data, 1);
+			waiting_for_threads(data, ids, starving_time_id, i);
+			ft_lstclear(&(data->head));
 			return (1);
 		}
 	}
-	simulation_started(data);
+	create_meals_thread(data);
 	if (pthread_create(&starving_time_id, NULL, (void *) meals_time, data))
 	{
 		ft_lstclear(&(data->head));

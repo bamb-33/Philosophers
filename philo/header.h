@@ -31,7 +31,13 @@ typedef struct s_philo
 	pthread_t		*ids;
 	pthread_t		starving_time_id;
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	lock;
+	pthread_mutex_t	*h_table_lock;
+	pthread_mutex_t	*thread_exited_lock;
+	pthread_mutex_t	*s_started_lock;
+	pthread_mutex_t	*s_time_lock;
+	pthread_mutex_t	counter_lock;
+	pthread_mutex_t	philo_died_lock;
+	pthread_mutex_t	a_t_exited_lock;
 	struct timeval	time_start;
 	struct timeval	*philos_starving_time;
 	t_to_free		*head;
@@ -44,6 +50,7 @@ typedef struct s_philo
 	int				*simulation_started;
 	int				all_threads_exited;
 	int				philo_died;
+	int				gtod_failed;
 	int				*hash_table;
 	int				*thread_exited;
 	char			**av;
@@ -57,6 +64,14 @@ void		philos_life(void *args);
 void		meals_time(void *args);
 long int	get_current_time(struct timeval *time_start);
 void		philosopher_status_printer(t_philo *data, int flag, int i);
+
+int counter(t_philo *data);
+int simulation_started(t_philo *data, int i, int flag);
+int hash_table(t_philo *data, int i, int flag);
+int philo_died(t_philo *data, int flag);
+int thread_exited(t_philo *data, int i, int flag);
+int all_threads_exited(t_philo *data, int flag);
+int gtod_failed_lock(t_philo *data, int flag);
 
 void		ft_lstadd_back(t_to_free **lst, t_to_free *new);
 void		ft_lstclear(t_to_free **lst);
