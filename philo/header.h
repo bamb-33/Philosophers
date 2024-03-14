@@ -58,6 +58,7 @@ typedef struct s_philo
 
 int			ft_atoi(const char *str);
 t_philo		*init(char *av[]);
+int	        init_3_5(t_philo *data, t_to_free *head);
 int			create_threads(t_philo *data,
 				pthread_t *ids, pthread_t starving_time_id);
 void		philos_life(void *args);

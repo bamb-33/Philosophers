@@ -48,6 +48,7 @@ int	init_2(t_philo *data, t_to_free *head)
 	if (!data->ids || !data->philos_starving_time || !data->hash_table
 		|| !data->simulation_started || !data->thread_exited)
 	{
+        printf("malloc failed\n");
 		ft_lstclear(&head);
 		return (1);
 	}
@@ -65,6 +66,7 @@ int	init_3(t_philo *data, t_to_free *head)
 	ft_lstadd_back(&head, ft_lstnew(data->forks));
 	if (!data->forks)
 	{
+        printf("malloc failed\n");
 		ft_lstclear(&head);
 		return (1);
 	}
@@ -72,47 +74,10 @@ int	init_3(t_philo *data, t_to_free *head)
 	{
 		if (pthread_mutex_init(&(data->forks[i++]), NULL))
 		{
+            printf("pthread_mutex_init failed\n");
 			ft_lstclear(&head);
 			return (1);
 		}
-	}
-	return (0);
-}
-
-int	init_3_5(t_philo *data, t_to_free *head)
-{
-	int	i;
-	int	error;
-
-	i = 0;
-	error = 0;
-	error += pthread_mutex_init(&(data->counter_lock), NULL);
-	error += pthread_mutex_init(&(data->philo_died_lock), NULL);
-	error += pthread_mutex_init(&(data->a_t_exited_lock), NULL);
-	data->h_table_lock = (pthread_mutex_t *) malloc
-		(sizeof(pthread_mutex_t) * data->philos_num);
-	ft_lstadd_back(&head, ft_lstnew(data->h_table_lock));
-	data->thread_exited_lock = (pthread_mutex_t *) malloc
-		(sizeof(pthread_mutex_t) * data->philos_num);
-	ft_lstadd_back(&head, ft_lstnew(data->thread_exited_lock));
-	data->s_started_lock = (pthread_mutex_t *) malloc
-		(sizeof(pthread_mutex_t) * data->philos_num);
-	ft_lstadd_back(&head, ft_lstnew(data->s_started_lock));
-	data->s_time_lock = (pthread_mutex_t *) malloc
-		(sizeof(pthread_mutex_t) * data->philos_num);
-	ft_lstadd_back(&head, ft_lstnew(data->s_time_lock));
-	while (i < data->philos_num)
-	{
-		error += pthread_mutex_init(&(data->h_table_lock[i]), NULL);
-		error += pthread_mutex_init(&(data->thread_exited_lock[i]), NULL);
-		error += pthread_mutex_init(&(data->s_started_lock[i]), NULL);
-		error += pthread_mutex_init(&(data->s_time_lock[i]), NULL);
-		i++;
-	}
-	if (!data->h_table_lock || !data->thread_exited_lock || !data->s_started_lock || error > 0)
-	{
-		ft_lstclear(&head);
-		return (1);
 	}
 	return (0);
 }

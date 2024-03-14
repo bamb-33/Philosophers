@@ -12,8 +12,6 @@
 
 #include "header.h"
 
-//if gettimefday failed once i should stop the simulation of course.
-
 void	philosopher_status_printer(t_philo *data, int flag, int i)
 {
 	long int	current_time;
@@ -36,23 +34,30 @@ void	philosopher_status_printer(t_philo *data, int flag, int i)
 		printf("%ld %d  is thinking\n", current_time, i + 1);
 }
 
+void    philo_sync(int i, t_philo *data)
+{
+	if (hash_table(data, (i + 1) % data->philos_num, 0) == 1 && data->philos_num % 2 == 1)
+		usleep(data->time_to_eat);
+	while (hash_table(data, (i + 1) % data->philos_num, 0) == 0 && data->philos_num % 2 == 0)
+		usleep(0);
+}
+
 void	limited_simulation(t_philo *data, int i)
 {
 	int	j;
 
 	j = 0;
-	while (j < data->num_of_times_philos_must_eat)
+	while (j++ < data->num_of_times_philos_must_eat)
 	{
 		philosopher_status_printer(data, 4, i);
-		if (hash_table(data, (i + 1) % data->philos_num, 0) == 1)
-			usleep(data->time_to_eat - 5);
+        philo_sync(i, data);
 		pthread_mutex_lock(&(data->forks[(i + 1) % data->philos_num]));
 		philosopher_status_printer(data, 1, i);
 		pthread_mutex_lock(&(data->forks[i]));
 		pthread_mutex_lock(&(data->s_time_lock[i]));
-		gettimeofday(&(data->philos_starving_time[i]), NULL);//writing
+		gettimeofday(&(data->philos_starving_time[i]), NULL);
 		pthread_mutex_unlock(&(data->s_time_lock[i]));
-		hash_table(data, i, 1);//writing
+		hash_table(data, i, 1);
 		philosopher_status_printer(data, 1, i);
 		philosopher_status_printer(data, 2, i);
 		usleep(data->time_to_eat);
@@ -62,7 +67,6 @@ void	limited_simulation(t_philo *data, int i)
 		usleep(data->time_to_sleep);
 		if (philo_died(data, 0) || gtod_failed_lock(data, 0))
 			break ;
-		j++;
 	}
 }
 
@@ -71,15 +75,14 @@ void	infinite_simulation(t_philo *data, int i)
 	while (1)
 	{
 		philosopher_status_printer(data, 4, i);
-		if (hash_table(data, (i + 1) % data->philos_num, 0) == 1)
-			usleep(data->time_to_eat - 5);
+        philo_sync(i, data);
 		pthread_mutex_lock(&(data->forks[(i + 1) % data->philos_num]));
 		philosopher_status_printer(data, 1, i);
 		pthread_mutex_lock(&(data->forks[i]));
 		pthread_mutex_lock(&(data->s_time_lock[i]));
-		gettimeofday(&(data->philos_starving_time[i]), NULL);//writing
+		gettimeofday(&(data->philos_starving_time[i]), NULL);
 		pthread_mutex_unlock(&(data->s_time_lock[i]));
-		hash_table(data, i, 1);//writing
+		hash_table(data, i, 1);
 		philosopher_status_printer(data, 1, i);
 		philosopher_status_printer(data, 2, i);
 		usleep(data->time_to_eat);
@@ -98,14 +101,14 @@ void	philos_life(void *args)
 	t_philo	*data;
 
 	data = (t_philo *) args;
-	i = counter(data);//write
+	i = counter(data);
 	if (gettimeofday(&(data->philos_starving_time[i]), NULL))
 	{
 		gtod_failed_lock(data, 1);
 		printf("gettimeofday failed\n");
 		return ;
 	}
-	simulation_started(data, i, 1);//writing
+	simulation_started(data, i, 1);
 	if (data->philos_num == 1)
 	{
 		philosopher_status_printer(data, 4, i);
@@ -116,5 +119,5 @@ void	philos_life(void *args)
 		infinite_simulation(data, i);
 	else
 		limited_simulation(data, i);
-	thread_exited(data, i, 1);//writing
+	thread_exited(data, i, 1);
 }

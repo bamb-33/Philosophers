@@ -43,17 +43,11 @@ void	*w_malloc(size_t size, t_to_free *head)
 void	w_gettimeofday(struct timeval *restrict tp,
 			void *restrict tzp, t_philo *data)
 {
-	//the big issue here is this gettimeofday function
-	//what we can do is put a lock here so only one 
-	//at a time can you use it to solve the starving time variable thing
-	//and in case of errors we ll try to solve that somehow
 	sem_wait(data->gtod_lock);
 	if (gettimeofday(tp, tzp))
 	{
 		printf("gettimeofday failed\n");
-		gtod_failed(data, 1);//writing
-		//to solve the read write operation that are simple like the one
-		//above i ll make a function with flags that has locks in it.
+		gtod_failed(data, 1);
 		sem_post(data->gtod_lock);
 	}
 	sem_post(data->gtod_lock);

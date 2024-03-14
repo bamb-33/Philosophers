@@ -12,7 +12,33 @@
 
 #include "header.h"
 
-void	philosopher_status_printer(t_philo *data, int flag, int i)//writing i guess
+void    opening_closing_sems(t_philo *data, int flag)
+{
+    if (flag == 0)
+    {
+        data->lock = w_sem_open("/sem_lock", 1, data->head);//if this function fails i am not supposed to call ft_lstclear cus i ll call it in my main parent.
+        data->gtod_lock = w_sem_open("/sem_gtod_lock", 1, data->head);
+        data->gtod_lockv2 = w_sem_open("/sem_gtod_lockv2", 1, data->head);
+        data->t_exited_lock = w_sem_open("/sem_t_exited_lock", 1, data->head);
+        data->philo_died_lock = w_sem_open("/sem_philo_died_lock", 1, data->head);
+    }
+    else
+    {
+        sem_unlink("/sem_lock");
+        sem_close(data->lock);
+        sem_unlink("/sem_gtod_lock");
+        sem_close(data->gtod_lock);
+        sem_unlink("/sem_gtod_lockv2");
+        sem_close(data->gtod_lockv2);
+        sem_unlink("/sem_t_exited_lock");
+        sem_close(data->t_exited_lock);
+		sem_unlink("/sem_philo_died_lock");
+		sem_close(data->philo_died_lock);
+    }
+
+}
+
+void	philosopher_status_printer(t_philo *data, int flag, int i)
 {
 	if (philo_died(data, 0))
 		return ;
@@ -93,12 +119,8 @@ void	philos_life(t_philo *data, int i)
 		controler = 1;
 	else
 		controler = 0;
-	data->lock = w_sem_open("/sem_lock", 1, data->head);
-	data->gtod_lock = w_sem_open("/sem_gtod_lock", 1, data->head);
-	data->gtod_lockv2 = w_sem_open("/sem_gtod_lockv2", 1, data->head);
-	data->t_exited_lock = w_sem_open("/sem_t_exited_lock", 1, data->head);
-	data->philo_died_lock = w_sem_open("/sem_philo_died_lock", 1, data->head);
-	pthread_create(&(data->t_id), NULL, (void *) meals_time, data);//start of the thread
+    opening_closing_sems(data, 0);
+	pthread_create(&(data->t_id), NULL, (void *) meals_time, data);
 	if (data->philos_num == 1)
 	{
 		philosopher_status_printer(data, 4, i);
@@ -109,28 +131,10 @@ void	philos_life(t_philo *data, int i)
 		infinite_simulation(data, i, controler);
 	else
 		limited_simulation(data, i, controler);
-	thread_exited(data, 1);//writing
+	thread_exited(data, 1);
 	pthread_join(data->t_id, NULL);
-	sem_unlink("/sem_lock");
-	sem_close(data->lock);
-	sem_unlink("/sem_gtod_lock");
-	sem_close(data->gtod_lock);
-	sem_unlink("/sem_gtod_lockv2");
-	sem_close(data->gtod_lockv2);
-	sem_unlink("/sem_t_thread_lock");
-	sem_close(data->t_exited_lock);
+    opening_closing_sems(data, 1);
 	if (philo_died(data, 0) == 1)
-	{
-		sem_unlink("/sem_philo_died_lock");
-		sem_close(data->philo_died_lock);
-		ft_lstclear(&(data->head));
 		exit(1);
-	}
-	else
-	{
-		sem_unlink("/sem_philo_died_lock");
-		sem_close(data->philo_died_lock);
-		ft_lstclear(&(data->head));
-		exit(0);
-	}
+	exit(0);
 }

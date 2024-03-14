@@ -16,11 +16,10 @@ void	meals_time(t_philo *data)
 {
 	while (!thread_exited(data, 0) && !gtod_failed(data, 0))
 	{
-		// printf("%ld\n", get_current_time(&(data->philos_starving_time), data));
 		if (get_current_time(&(data->philos_starving_time), data)//writing
 			> data->time_to_die)
 		{
-			philo_died(data, 1);//
+			philo_died(data, 1);
 			printf("%ld %d died\n", get_current_time(&(data->time_start), data),
 				data->philos_index + 1);//writing
 			break;

@@ -12,7 +12,7 @@
 
 #include "header.h"
 
-void	ft_lstclear(t_to_free **lst)
+void	ft_lstclear(t_to_free **lst)//i still have an error of the heap after use here.
 {
 	t_to_free	*tmp;
 
@@ -21,9 +21,8 @@ void	ft_lstclear(t_to_free **lst)
 	while (*lst)
 	{
 		tmp = *lst;
-		*lst = (*lst)->next;
 		free (tmp->content);
+		*lst = (*lst)->next;
 		free(tmp);
 	}
-	*lst = NULL;
 }
