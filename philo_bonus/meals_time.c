@@ -14,7 +14,7 @@
 
 void	meals_time(t_philo *data)
 {
-	while (!thread_exited(data, 0) && !gtod_failed(data, 0))
+	while (!thread_exited(data, 0) && !e_function_failed(data, 0))
 	{
 		if (get_current_time(&(data->philos_starving_time), data)//writing
 			> data->time_to_die)

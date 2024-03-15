@@ -12,17 +12,15 @@
 
 #include "header.h"
 
-void	ft_lstclear(t_to_free **lst)//i still have an error of the heap after use here.
+void	ft_lstclear(t_to_free *lst)//i still have an error of the heap after use here.
 {
 	t_to_free	*tmp;
 
-	if (!lst || !(*lst))
-		return ;
-	while (*lst)
+	while (lst)
 	{
-		tmp = *lst;
+		tmp = lst;
 		free (tmp->content);
-		*lst = (*lst)->next;
+		lst = (lst)->next;
 		free(tmp);
 	}
 }

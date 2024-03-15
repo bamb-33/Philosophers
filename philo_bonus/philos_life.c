@@ -12,35 +12,35 @@
 
 #include "header.h"
 
+//hahahahahahahahahahahahahahahahahahahahaahahahahahahahhahahahahahahahhahahahahahahahahahaha
+//remember to protect all the exteernal functions that you left unprotected
+
 void    opening_closing_sems(t_philo *data, int flag)
 {
     if (flag == 0)
     {
-        data->lock = w_sem_open("/sem_lock", 1, data->head);//if this function fails i am not supposed to call ft_lstclear cus i ll call it in my main parent.
-        data->gtod_lock = w_sem_open("/sem_gtod_lock", 1, data->head);
-        data->gtod_lockv2 = w_sem_open("/sem_gtod_lockv2", 1, data->head);
-        data->t_exited_lock = w_sem_open("/sem_t_exited_lock", 1, data->head);
-        data->philo_died_lock = w_sem_open("/sem_philo_died_lock", 1, data->head);
+        //if this function fails i am not supposed to call ft_lstclear cus i ll call it in my main parent.
+        data->gtod_lock = w_sem_open("/sem_gtod_lock", 1, data, 0);
+        data->e_function_lock = w_sem_open("/sem_e_function_lock", 1, data, 0);
+        data->t_exited_lock = w_sem_open("/sem_t_exited_lock", 1, data, 0);
+        data->philo_died_lock = w_sem_open("/sem_philo_died_lock", 1, data, 0);
     }
     else
     {
-        sem_unlink("/sem_lock");
-        sem_close(data->lock);
-        sem_unlink("/sem_gtod_lock");
-        sem_close(data->gtod_lock);
-        sem_unlink("/sem_gtod_lockv2");
-        sem_close(data->gtod_lockv2);
-        sem_unlink("/sem_t_exited_lock");
-        sem_close(data->t_exited_lock);
-		sem_unlink("/sem_philo_died_lock");
-		sem_close(data->philo_died_lock);
+	    w_sem_close(data->forks, data, 0);
+        w_sem_close(data->gtod_lock, data, 0);
+        w_sem_close(data->e_function_lock, data, 0);
+        w_sem_close(data->t_exited_lock, data, 0);
+		w_sem_close(data->philo_died_lock, data, 0);
+        ft_lstclear((data->head));//even tho i said that i don't have to free memory in here when i try to free it here it dosn't prompt double free(i hope you got what i mean)
+        //mybe the reason the leak appeared is because i am actually wrting on one of the allocated variables the varoable is (data) my struct it self so that might be the case 
     }
 
 }
 
 void	philosopher_status_printer(t_philo *data, int flag, int i)
 {
-	if (philo_died(data, 0))
+	if (philo_died(data, 0) || e_function_failed(data, 0))
 		return ;
 	if (flag == 1)
 		printf("%ld %d has taken a fork\n",
@@ -67,21 +67,22 @@ void	limited_simulation(t_philo *data, int i, int controler)
 		if (controler == 0 && data->philos_num % 2 == 1)
 			usleep(data->time_to_eat);
 		controler = 0;
-		sem_wait(data->forks);
+		w_sem_wait(data->forks, data, 0);
 		philosopher_status_printer(data, 1, i);
-		sem_wait(data->forks);
+		w_sem_wait(data->forks, data, 0);
 		w_gettimeofday(&(data->philos_starving_time), NULL, data);
 		philosopher_status_printer(data, 1, i);
 		philosopher_status_printer(data, 2, i);
 		usleep(data->time_to_eat);
-		sem_post(data->forks);
-		sem_post(data->forks);
+		w_sem_post(data->forks, data, 0);
+		w_sem_post(data->forks, data, 0);
 		philosopher_status_printer(data, 3, i);
 		usleep(data->time_to_sleep);
-		if (philo_died(data, 0))
+		if (philo_died(data, 0) || e_function_failed(data, 0))
 			break;
 		j++;
 	}
+	thread_exited(data, 1);//it gets stuck in here
 }
 
 void	infinite_simulation(t_philo *data, int i, int controler)
@@ -92,22 +93,21 @@ void	infinite_simulation(t_philo *data, int i, int controler)
 		if (controler == 0 && data->philos_num % 2 == 1)
 			usleep(data->time_to_eat);
 		controler = 0;
-		sem_wait(data->forks);
+		w_sem_wait(data->forks, data, 0);
 		philosopher_status_printer(data, 1, i);
-		sem_wait(data->forks);
-		sem_wait(data->lock);
+		w_sem_wait(data->forks, data, 0);
 		w_gettimeofday(&(data->philos_starving_time), NULL, data);//writing
-		sem_post(data->lock);
 		philosopher_status_printer(data, 1, i);
 		philosopher_status_printer(data, 2, i);
 		usleep(data->time_to_eat);
-		sem_post(data->forks);
-		sem_post(data->forks);
+		w_sem_post(data->forks, data, 0);
+		w_sem_post(data->forks, data, 0);
 		philosopher_status_printer(data, 3, i);
 		usleep(data->time_to_sleep);
-		if (philo_died(data, 0))
+		if (philo_died(data, 0) || e_function_failed(data, 0))
 			break;
 	}
+	thread_exited(data, 1);
 }
 
 void	philos_life(t_philo *data, int i)
@@ -131,10 +131,12 @@ void	philos_life(t_philo *data, int i)
 		infinite_simulation(data, i, controler);
 	else
 		limited_simulation(data, i, controler);
-	thread_exited(data, 1);
 	pthread_join(data->t_id, NULL);
-    opening_closing_sems(data, 1);
 	if (philo_died(data, 0) == 1)
+    {
+        opening_closing_sems(data, 1);
 		exit(1);
+    }
+    opening_closing_sems(data, 1);
 	exit(0);
 }

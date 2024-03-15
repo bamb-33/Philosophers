@@ -12,7 +12,7 @@
 
 #include "header.h"
 
-sem_t	*w_sem_open(const char *name, unsigned int value, t_to_free *head)
+sem_t	*w_sem_open(const char *name, unsigned int value, t_philo *data, int flag)
 {
 	sem_t	*result;
 
@@ -20,8 +20,12 @@ sem_t	*w_sem_open(const char *name, unsigned int value, t_to_free *head)
 	if (result == SEM_FAILED)
 	{
 		printf("sem_open failed\n");
-		ft_lstclear(&head);
-		exit(1);
+        e_function_failed(data, 1);
+        if (flag == 1)
+        {
+		    ft_lstclear(data->head);
+		    exit(1);
+        }
 	}
 	return (result);
 }
@@ -34,7 +38,7 @@ void	*w_malloc(size_t size, t_to_free *head)
 	if (result == NULL)
 	{
 		printf("malloc failed\n");
-		ft_lstclear(&head);
+		ft_lstclear(head);
 		exit(1);
 	}
 	return (result);
@@ -47,7 +51,7 @@ void	w_gettimeofday(struct timeval *restrict tp,
 	if (gettimeofday(tp, tzp))
 	{
 		printf("gettimeofday failed\n");
-		gtod_failed(data, 1);
+		e_function_failed(data, 1);
 		sem_post(data->gtod_lock);
 	}
 	sem_post(data->gtod_lock);
@@ -59,7 +63,7 @@ void	w_gettimeofday_1(struct timeval *restrict tp,
 	if (gettimeofday(tp, tzp))
 	{
 		printf("gettimeofday failed\n");
-		ft_lstclear(&(data->head));
+		ft_lstclear((data->head));
 		exit(1);
 	}
 }
@@ -74,8 +78,64 @@ pid_t	w_fork(t_philo *data, int i)
 		printf("fork failed\n");
 		while (i)
 			kill(data->pids[i--], SIGTERM);
-		ft_lstclear(&(data->head));
+		ft_lstclear((data->head));
 		exit(1);
 	}
 	return (result);
+}
+void    w_sem_wait(sem_t *lock, t_philo *data, int flag)
+{
+    if (sem_wait(lock))
+    {
+        printf("sem_wait failed\n");
+        e_function_failed(data, 1);
+        if (flag == 1)
+        {
+            ft_lstclear(data->head);
+            exit(1);
+        }
+    }
+}
+
+void    w_sem_post(sem_t *lock, t_philo *data, int flag)
+{
+    if (sem_post(lock))
+    {
+        printf("sem_post failed\n");
+        e_function_failed(data, 1);
+        if (flag == 1)
+        {
+            ft_lstclear(data->head);
+            exit(1);
+        }
+    }
+
+}
+
+void    w_sem_unlink(const char *name, t_philo *data, int flag)
+{
+    if (sem_unlink(name))
+    {
+        printf("sem_unlink failed\n");
+        e_function_failed(data, 1);// THIS SHIT IS NOT WORKING// the probleme is when you try to unlink the same sem twice it fails cus it already got unlinked
+        if (flag == 1)
+        {
+            ft_lstclear(data->head);
+            exit(1);
+        }
+    }
+}
+
+void    w_sem_close(sem_t *lock, t_philo *data, int flag)
+{
+    if (sem_close(lock))
+    {
+        printf("sem_close failed\n");
+        e_function_failed(data, 1);
+        if (flag == 1)
+        {
+            ft_lstclear(data->head);
+            exit(1);
+        }
+    }
 }

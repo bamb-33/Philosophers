@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "header.h"
-//why only one warning appears while i have multiple ft_lstclear in my program mybe the warning gets trigerd after i create the processes.
+
 int	main(int ac, char *av[])
 {
 	t_philo	*data;
@@ -23,6 +23,6 @@ int	main(int ac, char *av[])
 	}
 	data = init(av);
 	create_processes(data, data->pids, data->starving_time_id);
-	ft_lstclear(&(data->head));
+	ft_lstclear((data->head));
 	return (0);
 }

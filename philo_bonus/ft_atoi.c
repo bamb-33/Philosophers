@@ -30,7 +30,7 @@ int	ft_atoi(const char *str, t_to_free *head)
 	if (str[i] != '\0')
 	{
 		printf("one of the argument is not valid\n");
-		ft_lstclear(&head);
+		ft_lstclear(head);
 		exit(1);
 	}
 	return (result * sign);

@@ -1,14 +1,14 @@
 #include "header.h"
 
-int gtod_failed(t_philo *data, int flag)
+int e_function_failed(t_philo *data, int flag)
 {
     int value;
 
-    sem_wait(data->gtod_lockv2);
+    w_sem_wait(data->e_function_lock, data, 0);
     if (flag == 1)
-        data->gtod_failed = 1;
-    value = data->gtod_failed;
-    sem_post(data->gtod_lockv2);
+        data->e_function_failed = 1;
+    value = data->e_function_failed;
+    w_sem_post(data->e_function_lock, data, 0);
     return (value);
 }
 
@@ -16,11 +16,11 @@ int thread_exited(t_philo *data, int flag)
 {
     int value;
 
-    sem_wait(data->t_exited_lock);
+    w_sem_wait(data->t_exited_lock, data, 0);
     if (flag == 1)
         data->thread_exited = 1;
     value = data->thread_exited;
-    sem_post(data->t_exited_lock);
+    w_sem_post(data->t_exited_lock, data, 0);
     return (value);
 }
 
@@ -28,10 +28,10 @@ int philo_died(t_philo *data, int flag)
 {
     int value;
 
-    sem_wait(data->philo_died_lock);
+    w_sem_wait(data->philo_died_lock, data, 0);
     if (flag == 1)
         data->philo_died = 1;
     value = data->philo_died;
-    sem_post(data->philo_died_lock);
+    w_sem_post(data->philo_died_lock, data, 0);
     return (value);
 }

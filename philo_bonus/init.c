@@ -28,11 +28,11 @@ t_philo	*init(char *av[])
 		data->num_of_times_philos_must_eat = ft_atoi(av[5], head);
 	data->pids = (pid_t *) w_malloc (sizeof(pid_t) * data->philos_num, head);
 	ft_lstadd_back(&head, ft_lstnew(data->pids, head));
-	data->forks = w_sem_open("/sem", data->philos_num, head);
+	data->forks = w_sem_open("/sem", data->philos_num, data, 0);
 	data->head = head;
 	data->av = av;
 	data->thread_exited = 0;
-	data->gtod_failed = 0;
+	data->e_function_failed = 0;
 	data->philo_died = 0;
 	return (data);
 }
