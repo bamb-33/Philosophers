@@ -26,6 +26,6 @@ int	main(int ac, char *av[])
 		return (1);
 	if (create_threads(data, data->ids, data->starving_time_id))
 		return (1);
-	ft_lstclear(&(data->head));
+	ft_lstclear((data->head));
 	return (0);
 }

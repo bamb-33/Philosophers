@@ -48,19 +48,19 @@ int	create_threads(t_philo *data, pthread_t *ids, pthread_t starving_time_id)
 		{
 			philo_died(data, 1);
 			waiting_for_threads(data, ids, starving_time_id, i);
-			ft_lstclear(&(data->head));
+			ft_lstclear((data->head));
 			return (1);
 		}
 	}
 	create_meals_thread(data);
 	if (pthread_create(&starving_time_id, NULL, (void *) meals_time, data))
 	{
-		ft_lstclear(&(data->head));
+		ft_lstclear((data->head));
 		return (1);
 	}
 	if (waiting_for_threads(data, ids, starving_time_id, i))
 	{
-		ft_lstclear(&(data->head));
+		ft_lstclear((data->head));
 		return (1);
 	}
 	return (0);

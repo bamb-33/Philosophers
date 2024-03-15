@@ -12,18 +12,15 @@
 
 #include "header.h"
 
-void	ft_lstclear(t_to_free **lst)
+void	ft_lstclear(t_to_free *lst)//i have no idea why when i was using double pointer it wasn't not working.//try to find out later
 {
 	t_to_free	*tmp;
 
-	if (!lst || !(*lst))
-		return ;
-	while (*lst)
+	while (lst)
 	{
-		tmp = *lst;
+		tmp = lst;
 		free (tmp->content);
-		*lst = (*lst)->next;
+		lst = lst->next;
 		free(tmp);
 	}
-	*lst = NULL;
 }

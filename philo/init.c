@@ -26,7 +26,7 @@ int	init_1(t_philo *data, char *av[], t_to_free *head)
 		|| data->num_of_times_philos_must_eat < 0)
 	{
 		printf("invalid argument\n");
-		ft_lstclear(&head);
+		ft_lstclear(head);
 		return (1);
 	}
 	return (0);
@@ -49,7 +49,7 @@ int	init_2(t_philo *data, t_to_free *head)
 		|| !data->simulation_started || !data->thread_exited)
 	{
         printf("malloc failed\n");
-		ft_lstclear(&head);
+		ft_lstclear(head);
 		return (1);
 	}
 	data->head = head;
@@ -67,7 +67,7 @@ int	init_3(t_philo *data, t_to_free *head)
 	if (!data->forks)
 	{
         printf("malloc failed\n");
-		ft_lstclear(&head);
+		ft_lstclear(head);
 		return (1);
 	}
 	while (i < data->philos_num)
@@ -75,7 +75,7 @@ int	init_3(t_philo *data, t_to_free *head)
 		if (pthread_mutex_init(&(data->forks[i++]), NULL))
 		{
             printf("pthread_mutex_init failed\n");
-			ft_lstclear(&head);
+			ft_lstclear(head);
 			return (1);
 		}
 	}
@@ -104,7 +104,7 @@ int	init_4(t_philo *data, char *av[])
 	data->gtod_failed = 0;
 	if (gettimeofday(&(data->time_start), NULL))
 	{
-		ft_lstclear(&(data->head));
+		ft_lstclear((data->head));
 		return (1);
 	}
 	return (0);
@@ -119,7 +119,7 @@ t_philo	*init(char *av[])
 	head = ft_lstnew(data);
 	if (!data)
 	{
-		ft_lstclear(&head);
+		ft_lstclear(head);
 		return (NULL);
 	}
 	if (init_1(data, av, head))

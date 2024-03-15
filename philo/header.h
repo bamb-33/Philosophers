@@ -35,6 +35,7 @@ typedef struct s_philo
 	pthread_mutex_t	*thread_exited_lock;
 	pthread_mutex_t	*s_started_lock;
 	pthread_mutex_t	*s_time_lock;
+	pthread_mutex_t	lock;//fro test function del later
 	pthread_mutex_t	counter_lock;
 	pthread_mutex_t	philo_died_lock;
 	pthread_mutex_t	a_t_exited_lock;
@@ -75,7 +76,7 @@ int all_threads_exited(t_philo *data, int flag);
 int gtod_failed_lock(t_philo *data, int flag);
 
 void		ft_lstadd_back(t_to_free **lst, t_to_free *new);
-void		ft_lstclear(t_to_free **lst);
+void		ft_lstclear(t_to_free *lst);
 t_to_free	*ft_lstnew(void *content);
 
 #endif

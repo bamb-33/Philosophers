@@ -112,7 +112,7 @@ void	philos_life(void *args)
 	if (data->philos_num == 1)
 	{
 		philosopher_status_printer(data, 4, i);
-		while (data->philo_died == 0)
+		while (philo_died(data, 0) == 0)
 			usleep(1);
 	}
 	else if (data->av[5] == NULL)

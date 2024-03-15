@@ -45,13 +45,13 @@ int	init_3_5(t_philo *data, t_to_free *head)
 	if (!data->h_table_lock || !data->thread_exited_lock || !data->s_started_lock || !data->s_time_lock)
 	{
         printf("malloc failed\n");
-		ft_lstclear(&head);
+		ft_lstclear(head);
 		return (1);
 	}
     if (error < 0)
     {
         printf("pthread_mutex_init failed\n");
-		ft_lstclear(&head);
+		ft_lstclear(head);
 		return (1);
     }
 	return (0);
