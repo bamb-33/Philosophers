@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 15:06:35 by naadou            #+#    #+#             */
-/*   Updated: 2024/03/07 12:27:07 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/16 20:30:45 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	limited_simulation(t_philo *data, int i)
 	while (j++ < data->num_of_times_philos_must_eat)
 	{
 		philosopher_status_printer(data, 4, i);
-        philo_sync(i, data);
+		philo_sync(i, data);
 		pthread_mutex_lock(&(data->forks[(i + 1) % data->philos_num]));
 		philosopher_status_printer(data, 1, i);
 		pthread_mutex_lock(&(data->forks[i]));
@@ -77,7 +77,7 @@ void	infinite_simulation(t_philo *data, int i)
 	while (1)
 	{
 		philosopher_status_printer(data, 4, i);
-        philo_sync(i, data);
+		philo_sync(i, data);
 		pthread_mutex_lock(&(data->forks[(i + 1) % data->philos_num]));
 		philosopher_status_printer(data, 1, i);
 		pthread_mutex_lock(&(data->forks[i]));

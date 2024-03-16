@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 18:00:03 by naadou            #+#    #+#             */
-/*   Updated: 2024/03/11 10:00:28 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/16 16:55:10 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,13 @@ void	*w_malloc(size_t size, t_to_free *head)
 void	w_gettimeofday(struct timeval *restrict tp,
 			void *restrict tzp, t_philo *data)
 {
-	sem_wait(data->gtod_lock);
+	w_sem_wait(data->gtod_lock, data, 0);
 	if (gettimeofday(tp, tzp))
 	{
 		printf("gettimeofday failed\n");
 		e_function_failed(data, 1);
-		sem_post(data->gtod_lock);
 	}
-	sem_post(data->gtod_lock);
+	w_sem_post(data->gtod_lock, data, 0);
 }
 
 void	w_gettimeofday_1(struct timeval *restrict tp,

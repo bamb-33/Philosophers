@@ -6,36 +6,30 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 15:06:35 by naadou            #+#    #+#             */
-/*   Updated: 2024/03/11 11:41:22 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/16 20:26:28 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-//hahahahahahahahahahahahahahahahahahahahaahahahahahahahhahahahahahahahhahahahahahahahahahaha
-//remember to protect all the exteernal functions that you left unprotected
-
-void    opening_closing_sems(t_philo *data, int flag)
+void	opening_closing_sems(t_philo *data, int flag)
 {
-    if (flag == 0)
-    {
-        //if this function fails i am not supposed to call ft_lstclear cus i ll call it in my main parent.
-        data->gtod_lock = w_sem_open("/sem_gtod_lock", 1, data, 0);
-        data->e_function_lock = w_sem_open("/sem_e_function_lock", 1, data, 0);
-        data->t_exited_lock = w_sem_open("/sem_t_exited_lock", 1, data, 0);
-        data->philo_died_lock = w_sem_open("/sem_philo_died_lock", 1, data, 0);
-    }
-    else
-    {
-	    w_sem_close(data->forks, data, 0);
-        w_sem_close(data->gtod_lock, data, 0);
-        w_sem_close(data->e_function_lock, data, 0);
-        w_sem_close(data->t_exited_lock, data, 0);
+	if (flag == 0)
+	{
+		data->gtod_lock = w_sem_open("/sem_gtod_lock", 1, data, 0);
+		data->e_function_lock = w_sem_open("/sem_e_function_lock", 1, data, 0);
+		data->t_exited_lock = w_sem_open("/sem_t_exited_lock", 1, data, 0);
+		data->philo_died_lock = w_sem_open("/sem_philo_died_lock", 1, data, 0);
+	}
+	else
+	{
+		w_sem_close(data->forks, data, 0);
+		w_sem_close(data->gtod_lock, data, 0);
+		w_sem_close(data->e_function_lock, data, 0);
+		w_sem_close(data->t_exited_lock, data, 0);
 		w_sem_close(data->philo_died_lock, data, 0);
-        ft_lstclear((data->head));//even tho i said that i don't have to free memory in here when i try to free it here it dosn't prompt double free(i hope you got what i mean)
-        //mybe the reason the leak appeared is because i am actually wrting on one of the allocated variables the varoable is (data) my struct it self so that might be the case 
-    }
-
+		ft_lstclear((data->head));
+	}
 }
 
 void	philosopher_status_printer(t_philo *data, int flag, int i)
@@ -79,10 +73,10 @@ void	limited_simulation(t_philo *data, int i, int controler)
 		philosopher_status_printer(data, 3, i);
 		usleep(data->time_to_sleep);
 		if (philo_died(data, 0) || e_function_failed(data, 0))
-			break;
+			break ;
 		j++;
 	}
-	thread_exited(data, 1);//it gets stuck in here
+	thread_exited(data, 1);
 }
 
 void	infinite_simulation(t_philo *data, int i, int controler)
@@ -96,7 +90,7 @@ void	infinite_simulation(t_philo *data, int i, int controler)
 		w_sem_wait(data->forks, data, 0);
 		philosopher_status_printer(data, 1, i);
 		w_sem_wait(data->forks, data, 0);
-		w_gettimeofday(&(data->philos_starving_time), NULL, data);//writing
+		w_gettimeofday(&(data->philos_starving_time), NULL, data);
 		philosopher_status_printer(data, 1, i);
 		philosopher_status_printer(data, 2, i);
 		usleep(data->time_to_eat);
@@ -105,7 +99,7 @@ void	infinite_simulation(t_philo *data, int i, int controler)
 		philosopher_status_printer(data, 3, i);
 		usleep(data->time_to_sleep);
 		if (philo_died(data, 0) || e_function_failed(data, 0))
-			break;
+			break ;
 	}
 	thread_exited(data, 1);
 }
@@ -119,7 +113,7 @@ void	philos_life(t_philo *data, int i)
 		controler = 1;
 	else
 		controler = 0;
-    opening_closing_sems(data, 0);
+	opening_closing_sems(data, 0);
 	pthread_create(&(data->t_id), NULL, (void *) meals_time, data);
 	if (data->philos_num == 1)
 	{
@@ -133,10 +127,10 @@ void	philos_life(t_philo *data, int i)
 		limited_simulation(data, i, controler);
 	pthread_join(data->t_id, NULL);
 	if (philo_died(data, 0) == 1)
-    {
-        opening_closing_sems(data, 1);
+	{
+		opening_closing_sems(data, 1);
 		exit(1);
-    }
-    opening_closing_sems(data, 1);
+	}
+	opening_closing_sems(data, 1);
 	exit(0);
 }

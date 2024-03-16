@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 14:54:08 by naadou            #+#    #+#             */
-/*   Updated: 2024/03/07 12:24:31 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/16 20:31:31 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 
 int death_check(long int s_time, long int c_time, int i, t_philo *data)
 {
-    if (s_time > data->time_to_die && thread_exited(data, i, 0) == 0)
+	if (s_time > data->time_to_die && thread_exited(data, i, 0) == 0)
 	{
 		philo_died(data, 1);
 		usleep(500);
 		printf("%ld %d  died\n", c_time, i + 1);
 		return (1);
 	}
-    return (0);
+	return (0);
 }
 
 void	meals_time(void *args)
@@ -45,8 +45,8 @@ void	meals_time(void *args)
 			printf("gettimeofday failed\n");
 			break ;
 		}
-        if (death_check(p_s_time_time, current_time, i, data))
-            break ;
+		if (death_check(p_s_time_time, current_time, i, data))
+			break ;
 		i++;
 		if (i == data->philos_num)
 			i = 0;

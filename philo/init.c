@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 10:49:32 by naadou            #+#    #+#             */
-/*   Updated: 2024/02/29 12:29:36 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/16 20:30:16 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	init_2(t_philo *data, t_to_free *head)
 	if (!data->ids || !data->philos_starving_time || !data->hash_table
 		|| !data->simulation_started || !data->thread_exited)
 	{
-        printf("malloc failed\n");
+		printf("malloc failed\n");
 		ft_lstclear(head);
 		return (1);
 	}
@@ -66,7 +66,7 @@ int	init_3(t_philo *data, t_to_free *head)
 	ft_lstadd_back(&head, ft_lstnew(data->forks));
 	if (!data->forks)
 	{
-        printf("malloc failed\n");
+		printf("malloc failed\n");
 		ft_lstclear(head);
 		return (1);
 	}
@@ -74,7 +74,7 @@ int	init_3(t_philo *data, t_to_free *head)
 	{
 		if (pthread_mutex_init(&(data->forks[i++]), NULL))
 		{
-            printf("pthread_mutex_init failed\n");
+			printf("pthread_mutex_init failed\n");
 			ft_lstclear(head);
 			return (1);
 		}
