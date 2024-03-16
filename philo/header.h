@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 12:28:47 by naadou            #+#    #+#             */
-/*   Updated: 2024/03/16 20:28:18 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/16 21:06:13 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ typedef struct s_philo
 	pthread_mutex_t	*thread_exited_lock;
 	pthread_mutex_t	*s_started_lock;
 	pthread_mutex_t	*s_time_lock;
-	pthread_mutex_t	lock;//fro test function del later
 	pthread_mutex_t	counter_lock;
 	pthread_mutex_t	philo_died_lock;
 	pthread_mutex_t	a_t_exited_lock;

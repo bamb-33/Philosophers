@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 15:06:35 by naadou            #+#    #+#             */
-/*   Updated: 2024/03/16 20:30:45 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/16 21:16:08 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,27 +34,30 @@ void	philosopher_status_printer(t_philo *data, int flag, int i)
 		printf("%ld %d  is thinking\n", current_time, i + 1);
 }
 
-void    philo_sync(int i, t_philo *data)
+void	philo_sync(int i, t_philo *data)
 {
-	if (hash_table(data, (i + 1) % data->philos_num, 0) == 1 && data->philos_num % 2 == 1)
+	int	z;
+
+	z = (i + 1) % data->philos_num;
+	if (hash_table(data, z, 0) == 1 && data->philos_num % 2 == 1)
 		usleep(data->time_to_eat);
-	while (hash_table(data, (i + 1) % data->philos_num, 0) == 0 && data->philos_num % 2 == 0)
-    {
-        hash_table(data, (i + 1) % data->philos_num, 1);
+	while (hash_table(data, z, 0) == 0 && data->philos_num % 2 == 0)
+	{
+		hash_table(data, z, 1);
 		usleep(0);
-    }
-    if (i % 2 == 0)
-    {
-		pthread_mutex_lock(&(data->forks[(i + 1) % data->philos_num]));
+	}
+	if (i % 2 == 0)
+	{
+		pthread_mutex_lock(&(data->forks[z]));
 		philosopher_status_printer(data, 1, i);
 		pthread_mutex_lock(&(data->forks[i]));
-    }
-    else
-    {
+	}
+	else
+	{
 		pthread_mutex_lock(&(data->forks[i]));
 		philosopher_status_printer(data, 1, i);
-		pthread_mutex_lock(&(data->forks[(i + 1) % data->philos_num]));   
-    }
+		pthread_mutex_lock(&(data->forks[z]));
+	}
 }
 
 void	limited_simulation(t_philo *data, int i)

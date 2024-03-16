@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 10:49:32 by naadou            #+#    #+#             */
-/*   Updated: 2024/03/16 20:30:16 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/16 21:06:33 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ t_philo	*init(char *av[])
 		return (NULL);
 	if (init_3(data, head))
 		return (NULL);
-	if(init_3_5(data, head))
+	if (init_3_5(data, head))
 		return (NULL);
 	if (init_4(data, av))
 		return (NULL);

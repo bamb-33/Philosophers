@@ -1,7 +1,7 @@
 CC = cc
 CFLAGS = 
 
-SRC = main.c ft_atoi.c philos_life.c meals_time.c get_current_time.c ft_lstadd_back.c ft_lstclear.c ft_lstnew.c init.c processes.c wrappers.c lock_functions.c
+SRC = main.c ft_atoi.c philos_life.c meals_time.c get_current_time.c ft_lstadd_back.c ft_lstclear.c ft_lstnew.c init.c processes.c wrappers.c lock_functions.c wrappers_v2.c
 
 OBJ = $(SRC:.c=.o)
 NAME = philo

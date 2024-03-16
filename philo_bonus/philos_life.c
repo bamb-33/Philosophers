@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 15:06:35 by naadou            #+#    #+#             */
-/*   Updated: 2024/03/16 20:26:28 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/16 21:12:12 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	limited_simulation(t_philo *data, int i, int controler)
 	int	j;
 
 	j = 0;
-	while (j < data->num_of_times_philos_must_eat)
+	while (j++ < data->num_of_times_philos_must_eat)
 	{
 		philosopher_status_printer(data, 4, i);
 		if (controler == 0 && data->philos_num % 2 == 1)
@@ -74,9 +74,9 @@ void	limited_simulation(t_philo *data, int i, int controler)
 		usleep(data->time_to_sleep);
 		if (philo_died(data, 0) || e_function_failed(data, 0))
 			break ;
-		j++;
 	}
 	thread_exited(data, 1);
+	pthread_join(data->t_id, NULL);
 }
 
 void	infinite_simulation(t_philo *data, int i, int controler)
@@ -102,6 +102,7 @@ void	infinite_simulation(t_philo *data, int i, int controler)
 			break ;
 	}
 	thread_exited(data, 1);
+	pthread_join(data->t_id, NULL);
 }
 
 void	philos_life(t_philo *data, int i)
@@ -109,10 +110,9 @@ void	philos_life(t_philo *data, int i)
 	int	controler;
 
 	data->philos_index = i;
+	controler = 0;
 	if (i < data->philos_num / 2)
 		controler = 1;
-	else
-		controler = 0;
 	opening_closing_sems(data, 0);
 	pthread_create(&(data->t_id), NULL, (void *) meals_time, data);
 	if (data->philos_num == 1)
@@ -125,7 +125,6 @@ void	philos_life(t_philo *data, int i)
 		infinite_simulation(data, i, controler);
 	else
 		limited_simulation(data, i, controler);
-	pthread_join(data->t_id, NULL);
 	if (philo_died(data, 0) == 1)
 	{
 		opening_closing_sems(data, 1);

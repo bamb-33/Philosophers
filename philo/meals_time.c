@@ -6,13 +6,13 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 14:54:08 by naadou            #+#    #+#             */
-/*   Updated: 2024/03/16 20:31:31 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/16 21:12:39 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-int death_check(long int s_time, long int c_time, int i, t_philo *data)
+int	death_check(long int s_time, long int c_time, int i, t_philo *data)
 {
 	if (s_time > data->time_to_die && thread_exited(data, i, 0) == 0)
 	{

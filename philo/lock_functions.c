@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/16 20:32:39 by naadou            #+#    #+#             */
-/*   Updated: 2024/03/16 20:34:52 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/16 21:18:56 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,29 +67,5 @@ int	thread_exited(t_philo *data, int i, int flag)
 		data->thread_exited[i] = 1;
 	value = data->thread_exited[i];
 	pthread_mutex_unlock(&(data->thread_exited_lock[i]));
-	return (value);
-}
-
-int	all_threads_exited(t_philo *data, int flag)
-{
-	int	value;
-
-	pthread_mutex_lock(&(data->a_t_exited_lock));
-	if (flag == 1)
-		data->all_threads_exited = 1;
-	value = data->all_threads_exited;
-	pthread_mutex_unlock(&(data->a_t_exited_lock));
-	return (value);
-}
-
-int	gtod_failed_lock(t_philo *data, int flag)
-{
-	int	value;
-
-	pthread_mutex_lock(&(data->a_t_exited_lock));
-	if (flag == 1)
-		data->gtod_failed = 1;
-	value = data->gtod_failed;
-	pthread_mutex_unlock(&(data->a_t_exited_lock));
 	return (value);
 }
