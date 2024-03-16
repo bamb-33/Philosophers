@@ -34,7 +34,9 @@ void	philosopher_status_printer(t_philo *data, int flag, int i)
 		printf("%ld %d  is thinking\n", current_time, i + 1);
 }
 
-void    philo_sync(int i, t_philo *data)
+void    philo_sync(int i, t_philo *data)//well i think even tho the algo works the error will always appear
+//beacause probably when it ever sees a mutexes getting aquired in a circular motion it prompts the error so 
+//will make few changes to our code and finish this 
 {
 	if (hash_table(data, (i + 1) % data->philos_num, 0) == 1 && data->philos_num % 2 == 1)
 		usleep(data->time_to_eat);
@@ -61,8 +63,8 @@ void	limited_simulation(t_philo *data, int i)
 		philosopher_status_printer(data, 1, i);
 		philosopher_status_printer(data, 2, i);
 		usleep(data->time_to_eat);
-		pthread_mutex_unlock(&(data->forks[i]));
 		pthread_mutex_unlock(&(data->forks[(i + 1) % data->philos_num]));
+		pthread_mutex_unlock(&(data->forks[i]));
 		philosopher_status_printer(data, 3, i);
 		usleep(data->time_to_sleep);
 		if (philo_died(data, 0) || gtod_failed_lock(data, 0))
@@ -86,8 +88,8 @@ void	infinite_simulation(t_philo *data, int i)
 		philosopher_status_printer(data, 1, i);
 		philosopher_status_printer(data, 2, i);
 		usleep(data->time_to_eat);
-		pthread_mutex_unlock(&(data->forks[i]));
 		pthread_mutex_unlock(&(data->forks[(i + 1) % data->philos_num]));
+		pthread_mutex_unlock(&(data->forks[i]));
 		philosopher_status_printer(data, 3, i);
 		usleep(data->time_to_sleep);
 		if (philo_died(data, 0) || gtod_failed_lock(data, 0))
