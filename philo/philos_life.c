@@ -34,14 +34,27 @@ void	philosopher_status_printer(t_philo *data, int flag, int i)
 		printf("%ld %d  is thinking\n", current_time, i + 1);
 }
 
-void    philo_sync(int i, t_philo *data)//well i think even tho the algo works the error will always appear
-//beacause probably when it ever sees a mutexes getting aquired in a circular motion it prompts the error so 
-//will make few changes to our code and finish this 
+void    philo_sync(int i, t_philo *data)
 {
 	if (hash_table(data, (i + 1) % data->philos_num, 0) == 1 && data->philos_num % 2 == 1)
 		usleep(data->time_to_eat);
 	while (hash_table(data, (i + 1) % data->philos_num, 0) == 0 && data->philos_num % 2 == 0)
+    {
+        hash_table(data, (i + 1) % data->philos_num, 1);
 		usleep(0);
+    }
+    if (i % 2 == 0)
+    {
+		pthread_mutex_lock(&(data->forks[(i + 1) % data->philos_num]));
+		philosopher_status_printer(data, 1, i);
+		pthread_mutex_lock(&(data->forks[i]));
+    }
+    else
+    {
+		pthread_mutex_lock(&(data->forks[i]));
+		philosopher_status_printer(data, 1, i);
+		pthread_mutex_lock(&(data->forks[(i + 1) % data->philos_num]));   
+    }
 }
 
 void	limited_simulation(t_philo *data, int i)
@@ -53,9 +66,6 @@ void	limited_simulation(t_philo *data, int i)
 	{
 		philosopher_status_printer(data, 4, i);
 		philo_sync(i, data);
-		pthread_mutex_lock(&(data->forks[(i + 1) % data->philos_num]));
-		philosopher_status_printer(data, 1, i);
-		pthread_mutex_lock(&(data->forks[i]));
 		pthread_mutex_lock(&(data->s_time_lock[i]));
 		gettimeofday(&(data->philos_starving_time[i]), NULL);
 		pthread_mutex_unlock(&(data->s_time_lock[i]));
@@ -78,9 +88,6 @@ void	infinite_simulation(t_philo *data, int i)
 	{
 		philosopher_status_printer(data, 4, i);
 		philo_sync(i, data);
-		pthread_mutex_lock(&(data->forks[(i + 1) % data->philos_num]));
-		philosopher_status_printer(data, 1, i);
-		pthread_mutex_lock(&(data->forks[i]));
 		pthread_mutex_lock(&(data->s_time_lock[i]));
 		gettimeofday(&(data->philos_starving_time[i]), NULL);
 		pthread_mutex_unlock(&(data->s_time_lock[i]));
