@@ -12,22 +12,6 @@
 
 #include "header.h"
 
-void	exit_status(t_philo *data)
-{
-	int	status;
-	int	i;
-
-	i = 0;
-	waitpid(-1, &status, 0);
-	if (WIFEXITED(status))
-		status = WEXITSTATUS(status);
-	if (status == 1)
-	{
-		while (i < data->philos_num)
-			kill(data->pids[i++], SIGTERM);
-	}
-}
-
 void	wait_for_p(t_philo *data, pid_t *pids)
 {
 	int	i;
@@ -62,8 +46,8 @@ void	create_processes(t_philo *data, pid_t *pids)
 		usleep(50);
 		i++;
 	}
-	exit_status(data);
 	wait_for_p(data, pids);
 	unlink_sems(data);
 	w_sem_close(data->forks, data, 1);
+	w_sem_close(data->test_lock, data, 1);
 }

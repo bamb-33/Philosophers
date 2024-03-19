@@ -42,10 +42,7 @@ void	philo_sync(int i, t_philo *data)
 	if (hash_table(data, z, 0) == 1 && data->philos_num % 2 == 1)
 		usleep(data->time_to_eat);
 	while (hash_table(data, z, 0) == 0 && data->philos_num % 2 == 0)
-	{
-		hash_table(data, z, 1);
 		usleep(0);
-	}
 	if (i % 2 == 0)
 	{
 		pthread_mutex_lock(&(data->forks[z]));
