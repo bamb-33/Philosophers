@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 12:28:47 by naadou            #+#    #+#             */
-/*   Updated: 2024/03/16 20:23:47 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/18 22:00:40 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,11 @@ typedef struct s_philo
 	sem_t			*e_function_lock;
 	sem_t			*t_exited_lock;
 	sem_t			*philo_died_lock;
+	sem_t			*test_lock;
 	pthread_t		t_id;
 	struct timeval	time_start;
 	struct timeval	philos_starving_time;
+	struct timeval	test_time;
 	t_to_free		*head;
 	int				philos_num;
 	int				time_to_die;
@@ -59,8 +61,7 @@ typedef struct s_philo
 int			ft_atoi(const char *str, t_to_free *head);
 
 t_philo		*init(char *av[]);
-void		create_processes(t_philo *data, pid_t *pids,
-				pid_t starving_time_id);
+void		create_processes(t_philo *data, pid_t *pids);
 
 void		philos_life(t_philo *data, int i);
 void		meals_time(t_philo *data);

@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 15:06:35 by naadou            #+#    #+#             */
-/*   Updated: 2024/03/16 21:12:12 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/19 02:06:23 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	opening_closing_sems(t_philo *data, int flag)
 		data->e_function_lock = w_sem_open("/sem_e_function_lock", 1, data, 0);
 		data->t_exited_lock = w_sem_open("/sem_t_exited_lock", 1, data, 0);
 		data->philo_died_lock = w_sem_open("/sem_philo_died_lock", 1, data, 0);
+		data->test_lock = w_sem_open("/sem_test_lock", 1, data, 0);
 	}
 	else
 	{
@@ -28,6 +29,7 @@ void	opening_closing_sems(t_philo *data, int flag)
 		w_sem_close(data->e_function_lock, data, 0);
 		w_sem_close(data->t_exited_lock, data, 0);
 		w_sem_close(data->philo_died_lock, data, 0);
+		w_sem_close(data->test_lock, data, 0);
 		ft_lstclear((data->head));
 	}
 }
@@ -36,16 +38,16 @@ void	philosopher_status_printer(t_philo *data, int flag, int i)
 {
 	if (philo_died(data, 0) || e_function_failed(data, 0))
 		return ;
-	if (flag == 1)
+	if (flag == 1 && !philo_died(data, 0) && !e_function_failed(data, 0))
 		printf("%ld %d has taken a fork\n",
 			get_current_time(&(data->time_start), data), i + 1);
-	else if (flag == 2)
+	else if (flag == 2 && !philo_died(data, 0) && !e_function_failed(data, 0))
 		printf("%ld %d is eating\n",
 			get_current_time(&(data->time_start), data), i + 1);
-	else if (flag == 3)
+	else if (flag == 3 && !philo_died(data, 0) && !e_function_failed(data, 0))
 		printf("%ld %d is sleeping\n",
 			get_current_time(&(data->time_start), data), i + 1);
-	else if (flag == 4)
+	else if (flag == 4 && !philo_died(data, 0) && !e_function_failed(data, 0))
 		printf("%ld %d is thinking\n",
 			get_current_time(&(data->time_start), data), i + 1);
 }
@@ -100,6 +102,7 @@ void	infinite_simulation(t_philo *data, int i, int controler)
 		usleep(data->time_to_sleep);
 		if (philo_died(data, 0) || e_function_failed(data, 0))
 			break ;
+		printf("wa fink\n");
 	}
 	thread_exited(data, 1);
 	pthread_join(data->t_id, NULL);

@@ -6,7 +6,7 @@
 /*   By: naadou <naadou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 10:49:32 by naadou            #+#    #+#             */
-/*   Updated: 2024/03/11 11:41:20 by naadou           ###   ########.fr       */
+/*   Updated: 2024/03/19 00:52:46 by naadou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_philo	*init(char *av[])
 	t_philo		*data;
 	t_to_free	*head;
 
-	data = (t_philo *) w_malloc (sizeof(t_philo), head);
+	data = (t_philo *) w_malloc (sizeof(t_philo), NULL);
 	head = NULL;
 	head = ft_lstnew(data, head);
 	data->philos_num = ft_atoi(av[1], head);
