@@ -25,7 +25,7 @@ int	init_1(t_philo *data, char *av[], t_to_free *head)
 		|| data->time_to_eat < 0 || data->time_to_sleep < 0
 		|| data->num_of_times_philos_must_eat < 0)
 	{
-		printf("invalid argument\n");
+		printf("one of the argument is not valid\n");
 		ft_lstclear(head);
 		return (1);
 	}

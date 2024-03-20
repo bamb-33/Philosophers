@@ -29,20 +29,26 @@ void	unlink_sems(t_philo *data)
 	w_sem_unlink("/sem_e_function_lock", data, 1);
 	w_sem_unlink("/sem_philo_died_lock", data, 1);
 	w_sem_unlink("/sem_test_lock", data, 1);
+	w_sem_unlink("/sem_dont_print_lock", data, 1);
 }
 
 void	create_processes(t_philo *data, pid_t *pids)
 {
-	int				i;
+	int	i;
+	int	controler;
 
 	i = 0;
 	w_gettimeofday_1(&(data->time_start), NULL, data);
 	w_gettimeofday_1(&(data->philos_starving_time), NULL, data);
 	while (i < data->philos_num)
 	{
+		if (i < data->philos_num / 2)
+			controler = 1;
+		else
+			controler = 0;
 		pids[i] = w_fork(data, i);
 		if (pids[i] == 0)
-			philos_life(data, i);
+			philos_life(data, i, controler);
 		usleep(50);
 		i++;
 	}

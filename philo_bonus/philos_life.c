@@ -20,6 +20,7 @@ void	opening_closing_sems(t_philo *data, int flag)
 		data->e_function_lock = w_sem_open("/sem_e_function_lock", 1, data, 0);
 		data->t_exited_lock = w_sem_open("/sem_t_exited_lock", 1, data, 0);
 		data->philo_died_lock = w_sem_open("/sem_philo_died_lock", 1, data, 0);
+		data->dont_print_lock = w_sem_open("/sem_dont_print_lock", 1, data, 0);
 	}
 	else
 	{
@@ -29,6 +30,7 @@ void	opening_closing_sems(t_philo *data, int flag)
 		w_sem_close(data->t_exited_lock, data, 0);
 		w_sem_close(data->philo_died_lock, data, 0);
 		w_sem_close(data->test_lock, data, 0);
+		w_sem_close(data->dont_print_lock, data, 0);
 		ft_lstclear((data->head));
 	}
 }
@@ -37,16 +39,16 @@ void	philosopher_status_printer(t_philo *data, int flag, int i)
 {
 	if (philo_died(data, 0) || e_function_failed(data, 0))
 		return ;
-	if (flag == 1)
+	if (flag == 1 && dont_print(data, 0) == 0)
 		printf("%ld %d has taken a fork\n",
 			get_current_time(&(data->time_start), data), i + 1);
-	else if (flag == 2)
+	else if (flag == 2 && dont_print(data, 0) == 0)
 		printf("%ld %d is eating\n",
 			get_current_time(&(data->time_start), data), i + 1);
-	else if (flag == 3)
+	else if (flag == 3 && dont_print(data, 0) == 0)
 		printf("%ld %d is sleeping\n",
 			get_current_time(&(data->time_start), data), i + 1);
-	else if (flag == 4)
+	else if (flag == 4 && dont_print(data, 0) == 0)
 		printf("%ld %d is thinking\n",
 			get_current_time(&(data->time_start), data), i + 1);
 }
@@ -105,15 +107,9 @@ void	infinite_simulation(t_philo *data, int i, int controler)
 	thread_exited(data, 1);
 }
 
-void	philos_life(t_philo *data, int i)
+void	philos_life(t_philo *data, int i, int controler)
 {
-	int	controler;
-
 	data->philos_index = i;
-	if (i < data->philos_num / 2)
-		controler = 1;
-	else
-		controler = 0;
 	opening_closing_sems(data, 0);
 	pthread_create(&(data->t_id), NULL, (void *) meals_time, data);
 	if (data->philos_num == 1)

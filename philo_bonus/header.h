@@ -41,6 +41,7 @@ typedef struct s_philo
 	sem_t			*t_exited_lock;
 	sem_t			*philo_died_lock;
 	sem_t			*test_lock;
+	sem_t			*dont_print_lock;
 	pthread_t		t_id;
 	struct timeval	time_start;
 	struct timeval	philos_starving_time;
@@ -54,6 +55,7 @@ typedef struct s_philo
 	int				thread_exited;
 	int				e_function_failed;
 	int				philo_died;
+	int				dont_print;
 	int				philos_index;
 	char			**av;
 }	t_philo;
@@ -63,7 +65,7 @@ int			ft_atoi(const char *str, t_to_free *head);
 t_philo		*init(char *av[]);
 void		create_processes(t_philo *data, pid_t *pids);
 
-void		philos_life(t_philo *data, int i);
+void		philos_life(t_philo *data, int i, int controler);
 void		meals_time(t_philo *data);
 long int	get_current_time(struct timeval *time_start, t_philo *data);
 void		philosopher_status_printer(t_philo *data, int flag, int i);
@@ -84,6 +86,7 @@ void		w_sem_close(sem_t *lock, t_philo *data, int flag);
 int			e_function_failed(t_philo *data, int flag);
 int			thread_exited(t_philo *data, int flag);
 int			philo_died(t_philo *data, int flag);
+int			dont_print(t_philo *data, int flag);
 
 void		ft_lstadd_back(t_to_free **lst, t_to_free *new);
 void		ft_lstclear(t_to_free *lst);
