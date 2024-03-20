@@ -40,12 +40,10 @@ typedef struct s_philo
 	sem_t			*e_function_lock;
 	sem_t			*t_exited_lock;
 	sem_t			*philo_died_lock;
-	sem_t			*test_lock;
-	sem_t			*dont_print_lock;
+	sem_t			*stop_lock;
 	pthread_t		t_id;
 	struct timeval	time_start;
 	struct timeval	philos_starving_time;
-	struct timeval	test_time;
 	t_to_free		*head;
 	int				philos_num;
 	int				time_to_die;
@@ -55,7 +53,6 @@ typedef struct s_philo
 	int				thread_exited;
 	int				e_function_failed;
 	int				philo_died;
-	int				dont_print;
 	int				philos_index;
 	char			**av;
 }	t_philo;
@@ -86,7 +83,6 @@ void		w_sem_close(sem_t *lock, t_philo *data, int flag);
 int			e_function_failed(t_philo *data, int flag);
 int			thread_exited(t_philo *data, int flag);
 int			philo_died(t_philo *data, int flag);
-int			dont_print(t_philo *data, int flag);
 
 void		ft_lstadd_back(t_to_free **lst, t_to_free *new);
 void		ft_lstclear(t_to_free *lst);

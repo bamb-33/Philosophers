@@ -29,7 +29,6 @@ t_philo	*init(char *av[])
 	data->pids = (pid_t *) w_malloc (sizeof(pid_t) * data->philos_num, head);
 	ft_lstadd_back(&head, ft_lstnew(data->pids, head));
 	data->forks = w_sem_open("/sem", data->philos_num, data, 0);
-	data->test_lock = w_sem_open("/sem_test_lock", 1, data, 0);
 	data->head = head;
 	data->av = av;
 	data->thread_exited = 0;

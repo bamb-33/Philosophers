@@ -14,24 +14,24 @@
 
 int	ft_atoi(const char *str, t_to_free *head)
 {
-	int	i;
 	int	result;
 
-	i = 0;
 	result = 0;
-	while ((str[i] >= 9 && str[i] <= 13) || str[i] == 32)
-		i++;
-	if (str[i] == '+')
-		i++;
-	if (str[i] == '\0')
+	while ((*str >= 9 && *str <= 13) || *str == 32)
+		str++;
+	if (*str == '+')
+		str++;
+	if (*str == '\0')
 	{
 		printf("one of the argument is not valid\n");
 		ft_lstclear(head);
 		exit(1);
 	}
-	while (str[i] >= '0' && str[i] <= '9')
-		result = (result * 10) + (str[i++] - 48);
-	if (str[i] != '\0' || i == 0)
+	while (*str >= '0' && *str <= '9')
+		result = (result * 10) + (*str++ - 48);
+	while ((*str >= 9 && *str <= 13) || *str == 32)
+		str++;
+	if (*str != '\0')
 	{
 		printf("one of the argument is not valid\n");
 		ft_lstclear(head);
